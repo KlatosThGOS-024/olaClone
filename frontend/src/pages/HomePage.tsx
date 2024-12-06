@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const HomePage = () => {
   return (
     <section>
@@ -9,7 +11,7 @@ export const HomePage = () => {
           </h1>
           <div className=" flex flex-col space-y-5 mt-[28px]">
             <button className=" bg-black text-white px-[18px] rounded-lg py-[12px] ">
-              Continue with Phone Number
+              <Link to={"/user/signUp"}> Continue with Phone Number</Link>
             </button>
             <div className=" grid grid-cols-2 gap-3 ">
               <button

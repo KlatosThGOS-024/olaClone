@@ -3,7 +3,7 @@ import { Login } from "../components/Login";
 export const CaptainLogin = () => {
   return (
     <div>
-      <Login userType="Captain" />
+      <Login userType="captain" />
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { Signup } from "../components/SignUp";
 export const UserSignupPage = () => {
   return (
     <div>
-      <Signup userType="User" />
+      <Signup userType="user" />
     </div>
   );
 };
