@@ -4,7 +4,7 @@ import {
   userLogin,
   userLogout,
 } from "../controllers/user.controller";
-import userAuth from "../middleware/user.middleware";
+import { userAuth } from "../middleware/user.middleware";
 
 const userRouter = Router();
 userRouter.route("/signUp").post(userCreate);

@@ -1,6 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+const BACKEND_URI = "http://localhost:3000";
 export function Input({
   label,
   placeholder,
@@ -27,13 +28,24 @@ export function Input({
 
 export const Signup = ({ userType }: { userType: string }) => {
   const [firstName, setFirstName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [Username, setUsername] = useState("");
-  const [Password, setPassword] = useState("");
-  const [Email, setEmail] = useState("");
-  function send() {
-    console.log(firstName);
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  async function send() {
+    const response = await axios.post(
+      `${BACKEND_URI}/${userType === "user" ? "user" : "captain"}/signUp`,
+      {
+        username,
+        firstName,
+        password,
+        email,
+        lastName,
+      }
+    );
+    return response;
   }
+
   return (
     <section className=" w-[414px] mx-auto p-[44px]">
       <p className=" text-center flex gap-3  justify-center ">

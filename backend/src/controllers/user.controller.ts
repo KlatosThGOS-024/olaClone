@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler";
 import ApiResponse from "../utils/ApiResponse";
-import { userCreateSchema, userLoginSchema } from "../types/user.types";
+import { IUser, userCreateSchema, userLoginSchema } from "../types/user.types";
 import ApiError from "../utils/ApiError";
 import User from "../models/user.models";
-import { IUser } from "../models/user.models";
+
 const generateAccessToken = async (user: IUser) => {
   const accessToken = await user.generateAccessTokenMethod();
   return accessToken;

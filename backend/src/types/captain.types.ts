@@ -1,5 +1,6 @@
 import { z } from "zod";
-export interface IUser extends Document {
+
+export interface ICaptain extends Document {
   firstName: string;
   lastName: string;
   password: string;
@@ -7,15 +8,11 @@ export interface IUser extends Document {
   username: string;
   comparePassword(password: string): Promise<boolean>;
   generateAccessTokenMethod(): any;
+  socketId: string;
+  status: string;
+  vehicle: string;
 }
-type userType = {
-  firstName: string;
-  lastName: string;
-  password: string;
-  username: string;
-  email: string;
-};
-const userCreateSchema = z.object({
+const captainCreateSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   password: z
@@ -25,8 +22,18 @@ const userCreateSchema = z.object({
     .regex(/[0-9]/, "Must include a number"),
   username: z.string().min(3, "Username should be at least 3 digit"),
   email: z.string().email("Please enter a valid email"),
+  vehicle: z.object({
+    color: z.string(),
+    plate: z.string(),
+    capacity: z.number(),
+    vehicleType: z.string(),
+  }),
+  location: z.object({
+    lat: z.number(),
+    long: z.number(),
+  }),
 });
-const userLoginSchema = z.object({
+const captainLoginSchema = z.object({
   password: z.string(),
   username: z.string().min(3, "Username should be at least 3 digit"),
 });
@@ -34,9 +41,9 @@ const userLoginSchema = z.object({
 declare global {
   namespace Express {
     interface Request {
-      user?: IUser;
+      captain?: ICaptain;
     }
   }
 }
 
-export { userType, userCreateSchema, userLoginSchema };
+export { captainCreateSchema, captainLoginSchema };

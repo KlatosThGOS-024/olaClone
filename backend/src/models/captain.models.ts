@@ -1,9 +1,9 @@
 import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { IUser } from "../types/user.types";
+import { ICaptain } from "../types/captain.types";
 
-const userSchema = new Schema<IUser>({
+const captainSchema = new Schema<ICaptain>({
   firstName: {
     type: String,
     required: true,
@@ -43,20 +43,58 @@ const userSchema = new Schema<IUser>({
     indexedDB: true,
     length: [3, "Username at least 3 digit"],
   },
+  socketId: {
+    type: String,
+  },
+  status: {
+    type: String,
+    enum: ["active", "inactive"],
+    default: "inactive",
+  },
+  vehicle: {
+    color: {
+      type: String,
+      require: true,
+      minlength: [3, "Please Enter color of your vechile"],
+    },
+    plate: {
+      type: String,
+      required: true,
+      minlength: [3, "Please Enter color of your vechile"],
+    },
+    capacity: {
+      require: true,
+      type: Number,
+      minlength: [1, "Please Enter color of your vechile"],
+    },
+    vehicleType: {
+      type: String,
+      required: true,
+      enum: ["car", "bike", "trukun"],
+    },
+  },
+  location: {
+    lat: {
+      type: Number,
+    },
+    long: {
+      type: Number,
+    },
+  },
 });
 
-userSchema.pre("save", async function () {
+captainSchema.pre("save", async function () {
   const hashPassword = await bcrypt.hash(this.password, 10);
   this.password = hashPassword;
 });
 
-userSchema.methods.comparePassword = function (
+captainSchema.methods.comparePassword = function (
   password: string
 ): Promise<boolean> {
   return bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.generateAccessTokenMethod = function () {
+captainSchema.methods.generateAccessTokenMethod = function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -66,5 +104,5 @@ userSchema.methods.generateAccessTokenMethod = function () {
   );
 };
 
-const User = model<IUser>("User", userSchema);
-export default User;
+const Captain = model<ICaptain>("Captain", captainSchema);
+export default Captain;
