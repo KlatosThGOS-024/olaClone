@@ -70,7 +70,7 @@ const captainSchema = new Schema<ICaptain>({
     vehicleType: {
       type: String,
       required: true,
-      enum: ["car", "bike", "trukun"],
+      enum: ["Car", "Bike", "Truckun"],
     },
   },
   location: {

@@ -28,22 +28,49 @@ export function Input({
 
 export const Signup = ({ userType }: { userType: string }) => {
   const [firstName, setFirstName] = useState("");
+  const [color, setColor] = useState("");
+  const [type, setType] = useState("");
+  const [capacity, setCapacity] = useState(0);
+  const [plate, setPlate] = useState("");
+  const [lat, setLat] = useState("");
+  const [long, setLong] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   async function send() {
-    const response = await axios.post(
-      `${BACKEND_URI}/${userType === "user" ? "user" : "captain"}/signUp`,
-      {
+    if (userType === "captain") {
+      const captainResponse = await axios.post(
+        `${BACKEND_URI}/captain/signUp`,
+        {
+          username,
+          firstName,
+          password,
+          email,
+          lastName,
+          vehicle: {
+            color,
+            vehicleType: type,
+            capacity: +capacity,
+            plate,
+          },
+          location: {
+            lat: 2354,
+            long: 2354,
+          },
+        }
+      );
+      return captainResponse;
+    } else {
+      const userResponse = await axios.post(`${BACKEND_URI}/user/signUp`, {
         username,
         firstName,
         password,
         email,
         lastName,
-      }
-    );
-    return response;
+      });
+      return userResponse;
+    }
   }
 
   return (
@@ -70,11 +97,26 @@ export const Signup = ({ userType }: { userType: string }) => {
           placeholder="JohnDoe123"
         />
         <Input
-          setInput={setPassword}
+          setInput={setEmail}
           label="Email"
           placeholder="JohnDoe@xyz.com"
         />
-        <Input setInput={setEmail} label="Password" placeholder="JohnDoe123@" />
+        <Input
+          setInput={setPassword}
+          label="Password"
+          placeholder="JohnDoe123@"
+        />
+        {userType == "captain" && (
+          <>
+            <p>Please enter your vehcile info</p>
+            <div className=" grid grid-cols-2 gap-2">
+              <Input setInput={setColor} label="Color" placeholder="Red" />
+              <Input setInput={setType} label="Type" placeholder="Bike" />
+              <Input setInput={setCapacity} label="Capacity" placeholder="2" />
+              <Input setInput={setPlate} label="Plate" placeholder="Xyz" />
+            </div>
+          </>
+        )}
       </div>
       <button
         onClick={send}

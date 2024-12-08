@@ -15,7 +15,17 @@ const generateAccessToken = async (captain: ICaptain) => {
 const captainCreate = asyncHandler(async (req: Request, res: Response) => {
   const captainData = captainCreateSchema.safeParse(req.body);
   if (!captainData.success) {
-    res.send(new ApiError(400, "Credentails are wrong", captainData.data));
+    res
+      .status(402)
+      .send(
+        new ApiError(
+          400,
+          "Credentials are wrong",
+          captainData.error,
+          [],
+          "Validation error occurred"
+        )
+      );
     return;
   }
   const captainExisted = await Captain.find({
@@ -52,7 +62,15 @@ const captainCreate = asyncHandler(async (req: Request, res: Response) => {
 const captainLogin = asyncHandler(async (req: Request, res: Response) => {
   const captainData = captainLoginSchema.safeParse(req.body);
   if (!captainData.success) {
-    res.send(new ApiError(400, "Credentails are wrong", captainData.data));
+    res.send(
+      new ApiError(
+        400,
+        "Credentails are wrong",
+        captainData.error,
+        [],
+        "Validation error occurred"
+      )
+    );
     return;
   }
   const captainExisted = await Captain.findOne({
@@ -66,6 +84,7 @@ const captainLogin = asyncHandler(async (req: Request, res: Response) => {
       );
     return;
   }
+  captainExisted.status = "active";
   const passwordComp = await captainExisted.comparePassword(
     captainData?.data.password
   );
@@ -77,13 +96,15 @@ const captainLogin = asyncHandler(async (req: Request, res: Response) => {
 
   res
     .cookie("accessToken", accessToken)
-    .send(new ApiResponse(200, "Successfully login"));
+    .send(new ApiResponse(200, captainExisted, "Successfully login"));
 });
 const captainLogout = asyncHandler(async (req: Request, res: Response) => {
+  const captain = req.captain;
+  captain.status = "inactive";
   res
     .clearCookie("accessToken")
     .status(200)
-    .send(new ApiResponse(200, "Successfully Logout"));
+    .send(new ApiResponse(200, captain, "Successfully Logout"));
 });
 
 export { captainCreate, captainLogin, captainLogout };

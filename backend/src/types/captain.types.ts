@@ -41,7 +41,7 @@ const captainLoginSchema = z.object({
 declare global {
   namespace Express {
     interface Request {
-      captain?: ICaptain;
+      captain: ICaptain;
     }
   }
 }
