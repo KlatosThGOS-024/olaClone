@@ -69,7 +69,7 @@ const userLogin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, vo
     const accessToken = yield generateAccessToken(userExisted);
     res
         .cookie("accessToken", accessToken)
-        .send(new ApiResponse_1.default(200, "Successfully login"));
+        .send(new ApiResponse_1.default(200, accessToken, "Successfully login"));
 }));
 exports.userLogin = userLogin;
 const userLogout = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -64,7 +64,7 @@ const userLogin = asyncHandler(async (req: Request, res: Response) => {
 
   res
     .cookie("accessToken", accessToken)
-    .send(new ApiResponse(200, "Successfully login"));
+    .send(new ApiResponse(200, accessToken, "Successfully login"));
 });
 const userLogout = asyncHandler(async (req: Request, res: Response) => {
   res

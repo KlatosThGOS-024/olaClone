@@ -1,29 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Input } from "./SignUp";
 import { useState } from "react";
 import axios from "axios";
+type loginType = {
+  data: string;
+};
 
-const BACKEND_URI = "http://localhost:3000";
 export const Login = ({ userType }: { userType: string }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   async function send() {
     if (userType == "captain") {
-      const response = await axios.post("http://localhost:3000/captain/login", {
-        username,
-        password,
-      });
-      return response;
-    } else {
-      const response = await axios.post(
-        `${BACKEND_URI}/user/
-        login`,
+      const response: loginType = await axios.post(
+        "http://localhost:3000/captain/login",
         {
           username,
           password,
         }
       );
-      return response;
+      const token = response.data;
+      //@ts-ignore
+      localStorage.setItem("token", token.data);
+      navigate("/home");
+    } else {
+      const response: loginType = await axios.post(
+        `http://localhost:3000/user/login`,
+        {
+          username,
+          password,
+        }
+      );
+      //@ts-ignore
+      localStorage.setItem("token", response.data?.data);
+
+      navigate("/home");
     }
   }
 

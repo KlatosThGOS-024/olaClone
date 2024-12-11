@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const BACKEND_URI = "http://localhost:3000";
+
 export function Input({
   label,
   placeholder,
@@ -27,13 +28,13 @@ export function Input({
 }
 
 export const Signup = ({ userType }: { userType: string }) => {
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [color, setColor] = useState("");
   const [type, setType] = useState("");
   const [capacity, setCapacity] = useState(0);
   const [plate, setPlate] = useState("");
-  const [lat, setLat] = useState("");
-  const [long, setLong] = useState("");
+
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -60,7 +61,8 @@ export const Signup = ({ userType }: { userType: string }) => {
           },
         }
       );
-      return captainResponse;
+      console.log(captainResponse);
+      navigate("/captain/login");
     } else {
       const userResponse = await axios.post(`${BACKEND_URI}/user/signUp`, {
         username,
@@ -69,7 +71,8 @@ export const Signup = ({ userType }: { userType: string }) => {
         email,
         lastName,
       });
-      return userResponse;
+      console.log(userResponse);
+      navigate("/user/login");
     }
   }
 
