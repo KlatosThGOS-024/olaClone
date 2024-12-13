@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userLogout = exports.userLogin = exports.userCreate = void 0;
+exports.userProfile = exports.userLogout = exports.userLogin = exports.userCreate = void 0;
 const asyncHandler_1 = __importDefault(require("../utils/asyncHandler"));
 const ApiResponse_1 = __importDefault(require("../utils/ApiResponse"));
 const user_types_1 = require("../types/user.types");
@@ -72,6 +72,13 @@ const userLogin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, vo
         .send(new ApiResponse_1.default(200, accessToken, "Successfully login"));
 }));
 exports.userLogin = userLogin;
+const userProfile = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    res
+        .status(200)
+        .send(new ApiResponse_1.default(200, user, "User Profile Successfully retrevied"));
+}));
+exports.userProfile = userProfile;
 const userLogout = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res
         .clearCookie("accessToken")

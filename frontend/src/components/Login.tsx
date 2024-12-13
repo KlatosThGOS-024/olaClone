@@ -12,27 +12,28 @@ export const Login = ({ userType }: { userType: string }) => {
   const [password, setPassword] = useState("");
   async function send() {
     if (userType == "captain") {
-      const response: loginType = await axios.post(
-        "http://localhost:3000/captain/login",
+      const captainResponse: loginType = await axios.post(
+        "http://localhost:3000/api/v1/captain/login",
         {
           username,
           password,
         }
       );
-      const token = response.data;
       //@ts-ignore
-      localStorage.setItem("token", token.data);
-      navigate("/home");
+      const token = captainResponse.data.data.accessToken;
+      //@ts-ignore
+      localStorage.setItem("token", token);
+      navigate("/captain/home");
     } else {
-      const response: loginType = await axios.post(
-        `http://localhost:3000/user/login`,
+      const userResponse: loginType = await axios.post(
+        `http://localhost:3000/api/v1/user/login`,
         {
           username,
           password,
         }
       );
       //@ts-ignore
-      localStorage.setItem("token", response.data?.data);
+      localStorage.setItem("token", userResponse.data?.data);
 
       navigate("/home");
     }

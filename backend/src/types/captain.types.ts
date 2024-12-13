@@ -11,6 +11,7 @@ export interface ICaptain extends Document {
   socketId: string;
   status: string;
   vehicle: string;
+  accessToken: string;
 }
 const captainCreateSchema = z.object({
   firstName: z.string(),

@@ -93,11 +93,18 @@ const captainLogin = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
   const accessToken = await generateAccessToken(captainExisted);
-
+  captainExisted.accessToken = accessToken;
   res
     .cookie("accessToken", accessToken)
     .send(new ApiResponse(200, captainExisted, "Successfully login"));
 });
+const captainProfile = asyncHandler(async (req: Request, res: Response) => {
+  const captain = req.captain;
+  res
+    .status(200)
+    .send(new ApiResponse(200, captain, "User Profile Successfully retrevied"));
+});
+
 const captainLogout = asyncHandler(async (req: Request, res: Response) => {
   const captain = req.captain;
   captain.status = "inactive";
@@ -107,4 +114,4 @@ const captainLogout = asyncHandler(async (req: Request, res: Response) => {
     .send(new ApiResponse(200, captain, "Successfully Logout"));
 });
 
-export { captainCreate, captainLogin, captainLogout };
+export { captainCreate, captainLogin, captainLogout, captainProfile };

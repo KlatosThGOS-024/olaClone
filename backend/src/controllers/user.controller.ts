@@ -66,6 +66,13 @@ const userLogin = asyncHandler(async (req: Request, res: Response) => {
     .cookie("accessToken", accessToken)
     .send(new ApiResponse(200, accessToken, "Successfully login"));
 });
+const userProfile = asyncHandler(async (req: Request, res: Response) => {
+  const user = req.user;
+  res
+    .status(200)
+    .send(new ApiResponse(200, user, "User Profile Successfully retrevied"));
+});
+
 const userLogout = asyncHandler(async (req: Request, res: Response) => {
   res
     .clearCookie("accessToken")
@@ -73,4 +80,4 @@ const userLogout = asyncHandler(async (req: Request, res: Response) => {
     .send(new ApiResponse(200, "Successfully Logout"));
 });
 
-export { userCreate, userLogin, userLogout };
+export { userCreate, userLogin, userLogout, userProfile };

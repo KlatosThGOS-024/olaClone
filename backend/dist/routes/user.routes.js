@@ -6,5 +6,6 @@ const user_middleware_1 = require("../middleware/user.middleware");
 const userRouter = (0, express_1.Router)();
 userRouter.route("/signUp").post(user_controller_1.userCreate);
 userRouter.route("/login").post(user_controller_1.userLogin);
+userRouter.route("/profile").get(user_middleware_1.userAuth, user_controller_1.userProfile);
 userRouter.route("/logout").get(user_middleware_1.userAuth, user_controller_1.userLogout);
 exports.default = userRouter;

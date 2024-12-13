@@ -42,7 +42,7 @@ export const Signup = ({ userType }: { userType: string }) => {
   async function send() {
     if (userType === "captain") {
       const captainResponse = await axios.post(
-        `${BACKEND_URI}/captain/signUp`,
+        `${BACKEND_URI}/api/v1/captain/signUp`,
         {
           username,
           firstName,
@@ -64,13 +64,16 @@ export const Signup = ({ userType }: { userType: string }) => {
       console.log(captainResponse);
       navigate("/captain/login");
     } else {
-      const userResponse = await axios.post(`${BACKEND_URI}/user/signUp`, {
-        username,
-        firstName,
-        password,
-        email,
-        lastName,
-      });
+      const userResponse = await axios.post(
+        `${BACKEND_URI}/api/v1/user/signUp`,
+        {
+          username,
+          firstName,
+          password,
+          email,
+          lastName,
+        }
+      );
       console.log(userResponse);
       navigate("/user/login");
     }

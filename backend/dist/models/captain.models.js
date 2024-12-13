@@ -89,6 +89,9 @@ const captainSchema = new mongoose_1.Schema({
             type: Number,
         },
     },
+    accessToken: {
+        type: String,
+    },
 });
 captainSchema.pre("save", function () {
     return __awaiter(this, void 0, void 0, function* () {

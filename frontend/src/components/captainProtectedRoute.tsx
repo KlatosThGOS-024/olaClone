@@ -8,26 +8,30 @@ const CaptainProtectWrapper = ({ children }: any) => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
+  // string | JwtPayload
 
   useEffect(() => {
     if (!token) {
-      navigate("/captain-login");
+      console.log("ghello");
+      navigate("/captain/login");
     }
 
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/captains/profile`, {
+      .get(`http://localhost:3000/api/v1/captain/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
+
       .then((response) => {
         if (response.status === 200) {
+          console.log("ghello");
           setIsLoading(false);
         }
       })
       .catch(() => {
         localStorage.removeItem("token");
-        navigate("/captain-login");
+        navigate("/captain/login");
       });
   }, [token]);
 

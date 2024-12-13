@@ -10,17 +10,19 @@ import { HomePage } from "./pages/HomePage";
 import { UserLogOut } from "./pages/UserLogOut";
 import CaptainProtectWrapper from "./components/captainProtectedRoute";
 import { CaptainHome } from "./pages/CaptainHome";
+import { Riding } from "./pages/RidingPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {" "}
         <Route element={<StartPage />} path="/" />
         <Route element={<UserSignupPage />} path="/user/signUp" />
+        <Route element={<Riding />} path="/user/ride" />
         <Route element={<UserLogin />} path="/user/login" />
         <Route element={<CaptainLogin />} path="/captain/login" />
         <Route element={<CaptainSignUp />} path="/captain/signUp" />
+
         <Route
           element={<UserProtectedRoute>{<HomePage />}</UserProtectedRoute>}
           path="/home"
@@ -29,15 +31,10 @@ function App() {
           element={<UserProtectedRoute>{<UserLogOut />}</UserProtectedRoute>}
           path="/user/logOut"
         />
-        <Route
-          element={
-            <CaptainProtectWrapper>{<CaptainHome />}</CaptainProtectWrapper>
-          }
-          path="/captain/home"
-        />
+        <Route element={<CaptainHome />} path="/captain/home" />
       </Routes>
     </BrowserRouter>
   );
 }
-
+// MaliNa123@!
 export default App;

@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ICaptain } from "../types/captain.types";
+import { string } from "zod";
 
 const captainSchema = new Schema<ICaptain>({
   firstName: {
@@ -80,6 +81,9 @@ const captainSchema = new Schema<ICaptain>({
     long: {
       type: Number,
     },
+  },
+  accessToken: {
+    type: String,
   },
 });
 
