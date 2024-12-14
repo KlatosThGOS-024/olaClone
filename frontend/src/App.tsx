@@ -11,6 +11,8 @@ import { UserLogOut } from "./pages/UserLogOut";
 import CaptainProtectWrapper from "./components/captainProtectedRoute";
 import { CaptainHome } from "./pages/CaptainHome";
 import { Riding } from "./pages/RidingPage";
+import { CabRequest } from "./components/CabRequest";
+import { FinishRide } from "./components/FinishRide";
 
 function App() {
   return (
@@ -32,6 +34,9 @@ function App() {
           path="/user/logOut"
         />
         <Route element={<CaptainHome />} path="/captain/home" />
+        <Route element={<CabRequest />} path="/captain/cabRequests" />
+
+        <Route element={<FinishRide />} path="/captain/ride" />
       </Routes>
     </BrowserRouter>
   );
