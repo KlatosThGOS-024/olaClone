@@ -4,7 +4,7 @@
   "description": "uberClone with backend and frontend",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -b",
+    "build": "ts-node-dev src",
     "node": "nodemon dist/index.js",
     "dev": "npm run build && npm run node"
   },

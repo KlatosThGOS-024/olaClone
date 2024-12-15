@@ -1,5 +1,6 @@
 import { z } from "zod";
 export interface IUser extends Document {
+  _id?: string;
   firstName: string;
   lastName: string;
   password: string;
@@ -8,13 +9,7 @@ export interface IUser extends Document {
   comparePassword(password: string): Promise<boolean>;
   generateAccessTokenMethod(): any;
 }
-type userType = {
-  firstName: string;
-  lastName: string;
-  password: string;
-  username: string;
-  email: string;
-};
+
 const userCreateSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
@@ -34,9 +29,9 @@ const userLoginSchema = z.object({
 declare global {
   namespace Express {
     interface Request {
-      user?: IUser;
+      user: IUser;
     }
   }
 }
 
-export { userType, userCreateSchema, userLoginSchema };
+export { userCreateSchema, userLoginSchema };
