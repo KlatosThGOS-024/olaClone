@@ -6,6 +6,7 @@ import Captain from "../models/captain.models";
 const userAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const jwtToken = req.headers?.authorization || req.cookies.accessToken;
+    console.log(jwtToken);
     const token = jwtToken.split("Bearer")[1].split(" ")[1];
     const decodedToken = jwt.verify(token, "process.env.accessTokenSecret");
     //@ts-ignore

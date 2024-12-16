@@ -8,6 +8,7 @@ import {
   captainLoginSchema,
   ICaptain,
 } from "../types/captain.types";
+import User from "../models/user.models";
 const generateAccessToken = async (captain: ICaptain) => {
   const accessToken = await captain.generateAccessTokenMethod();
   return accessToken;
@@ -104,7 +105,17 @@ const captainProfile = asyncHandler(async (req: Request, res: Response) => {
     .status(200)
     .send(new ApiResponse(200, captain, "User Profile Successfully retrevied"));
 });
-
+const userProfileFromCaptain = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.body;
+    const userProfile = await User.findById({ userId }).select("-password");
+    res
+      .status(200)
+      .send(
+        new ApiResponse(200, userProfile, "User Profile Successfully retrevied")
+      );
+  }
+);
 const captainLogout = asyncHandler(async (req: Request, res: Response) => {
   const captain = req.captain;
   captain.status = "inactive";
@@ -114,4 +125,10 @@ const captainLogout = asyncHandler(async (req: Request, res: Response) => {
     .send(new ApiResponse(200, captain, "Successfully Logout"));
 });
 
-export { captainCreate, captainLogin, captainLogout, captainProfile };
+export {
+  captainCreate,
+  captainLogin,
+  captainLogout,
+  captainProfile,
+  userProfileFromCaptain,
+};

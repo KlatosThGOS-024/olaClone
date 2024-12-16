@@ -20,8 +20,9 @@ export interface IRide extends Document {
 const rideCreateSchema = z.object({
   destinationLocation: z.string().min(3, "Address should be at least 3 digit"),
   pickupLocation: z.string().min(3, "Address should be at least 3 digit"),
-
-  vehicle: z.enum(["car", "bike", "auto"]),
+  vehicleFee: z.string(),
+  vehicle: z.enum(["OlaGo", "olaChopper", "olaTukTuk", "olaMoto"]),
+  vehicleAway: z.string(),
 });
 type RideCreateData = z.infer<typeof rideCreateSchema>;
 

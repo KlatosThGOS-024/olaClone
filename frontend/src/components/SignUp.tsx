@@ -114,7 +114,7 @@ export const Signup = ({ userType }: { userType: string }) => {
         />
         {userType == "captain" && (
           <>
-            <p>Please enter your vehcile info</p>
+            <p>Please enter your vehicle info</p>
             <div className=" grid grid-cols-2 gap-2">
               <Input setInput={setColor} label="Color" placeholder="Red" />
               <Input setInput={setType} label="Type" placeholder="Bike" />

@@ -32,10 +32,12 @@ const ChooseYourRide = ({
   panelClose,
   closeRide,
   rideConfirmedFun,
+  setvehicleDetails,
 }: {
   panelClose: any;
   closeRide: any;
   rideConfirmedFun: any;
+  setvehicleDetails: any;
 }) => {
   const onClickHandler = () => {
     if (rideConfirmedFun) {
@@ -67,6 +69,11 @@ const ChooseYourRide = ({
         {data.map((value) => (
           <div
             onClick={() => {
+              setvehicleDetails({
+                vehicleName: value.vechName,
+                vehicleFee: value.price,
+                vehicleAway: value.timing,
+              });
               onClickHandler();
             }}
             key={value.imgSrc}

@@ -8,7 +8,6 @@ import { CaptainLogin } from "./pages/CaptainLogin";
 import { UserProtectedRoute } from "./components/userProtectedRoutes";
 import { HomePage } from "./pages/HomePage";
 import { UserLogOut } from "./pages/UserLogOut";
-import CaptainProtectWrapper from "./components/captainProtectedRoute";
 import { CaptainHome } from "./pages/CaptainHome";
 import { Riding } from "./pages/RidingPage";
 import { CabRequest } from "./components/CabRequest";

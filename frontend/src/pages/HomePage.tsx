@@ -2,32 +2,106 @@ import { useState } from "react";
 import { SearchedLocations } from "../components/SearchedLocations";
 import { motion } from "framer-motion";
 import ChooseYourRide from "../components/ChooseYourRide";
-import ConfirmYourRide from "../components/ConfirmYourRide";
+import { ConfirmYourRide } from "../components/ConfirmYourRide";
+import { AddressSuggestions } from "../components/AddressSuggestions";
 
 // Sjernf@!34
 
 export const HomePage = () => {
   const [openPanel, setopenPanel] = useState(false);
   const [vechPanel, setvechPanel] = useState(false);
-  const [myLocation, setMyLocation] = useState("");
-  const [destinationLocation, setDestinationLocation] = useState("");
+  const [Suggestions, setSuggestions] = useState<string[]>([]);
+  const [destinationLocation, setDestinationLocation] = useState<string>("");
+  const [pickupLocation, setPickupLocation] = useState<string>("");
+  const [DestinationSuggestions, setDestinationSuggestions] = useState<
+    string[]
+  >([]);
+  const [PickupSuggestions, setPickupSuggestions] = useState<string[]>([]);
   const [confirmRide, setConfirmRide] = useState(false);
+  const [distanceTime, setdistanceTime] = useState({
+    distance: "",
+    time: "",
+  });
+  const [vehicleDetails, setvehicleDetails] = useState({
+    vehicleName: "",
+    vehicleFee: "",
+    vehicleAway: "",
+  });
+
   const panelOpen = () => {
     setopenPanel(!openPanel);
   };
-  const openRide = () => {
+  const openRide = async () => {
     setvechPanel(!vechPanel);
+  };
+  const createRide = async () => {
+    const url = `http://localhost:3000/api/v1/ride/user-ride`;
+    const data = {
+      vehicle: vehicleDetails.vehicleName,
+      pickupLocation,
+      destinationLocation,
+      vehicleFee: vehicleDetails.vehicleFee,
+      vehicleAway: vehicleDetails.vehicleAway,
+    };
+    const token = localStorage.getItem("token");
+    console.log(token);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    console.log(responseData);
+    // setdistanceTime({
+    //   distance: addresses.data.distance.text,
+    //   time: addresses.data.duration.text,
+    // });
   };
   const rideConfirmedFunc = () => {
     setConfirmRide(!confirmRide);
   };
+
+  const getSuggestions = async (query: string, isPickup: boolean) => {
+    if (!(query == "")) {
+      const url = `http://localhost:3000/api/v1/map/getSuggestion?address=${query}`;
+      const response = await fetch(url, { method: "GET" });
+      const addresses = await response.json();
+      setSuggestions(addresses.data);
+    }
+    if (isPickup) {
+      setPickupSuggestions(
+        Suggestions.filter((suggestion) =>
+          suggestion.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    } else {
+      setDestinationSuggestions(
+        Suggestions.filter((suggestion) =>
+          suggestion.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    }
+  };
+
+  const handleSelectSuggestion = (address: string, isPickup: boolean) => {
+    if (isPickup) {
+      setPickupLocation(address);
+      setPickupSuggestions([]);
+    } else {
+      setDestinationLocation(address);
+      setDestinationSuggestions([]);
+    }
+  };
+
   return (
     <section className=" overflow-y-hidden relative">
-      {/* Background Image */}
       <div className="">
         <img src="../../public/images/map1.png" />
       </div>
-      {/* First Motion where the search Destination will get hide */}
+
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: openPanel ? 500 : 0 }}
@@ -81,7 +155,7 @@ export const HomePage = () => {
           <SearchedLocations />
         </div>
       </motion.div>
-      {/* Second Motion where the search Destination and address comes from above */}
+
       <motion.div
         initial={{ y: 0 }}
         animate={{
@@ -118,28 +192,57 @@ export const HomePage = () => {
         >
           <div className=" flex items-center">
             <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-            <input
-              onChange={(e: any) => setMyLocation(e.target.value)}
-              className="w-full bg-[#eee] px-[18px] py-[13px] outline-none  "
-              placeholder="Search for an address or landmark"
-            ></input>
+            <div>
+              <input
+                onChange={(e: any) => {
+                  getSuggestions(e.target.value, true);
+                  setPickupLocation(e.target.value);
+                }}
+                className="w-full bg-[#eee] px-[18px] py-[13px] outline-none  "
+                placeholder="Search for an address or landmark"
+                value={pickupLocation}
+              ></input>
+
+              <AddressSuggestions
+                classAttribute={"absolute "}
+                setInput={setPickupLocation}
+                onSelectSuggestion={(address: string) => {
+                  handleSelectSuggestion(address, true);
+                }}
+                suggestions={PickupSuggestions}
+              />
+            </div>
           </div>
           <div className=" flex items-center">
             <div className="w-4 h-4 bg-red-600 rounded-full"></div>
-            <input
-              onChange={(e: any) => setDestinationLocation(e.target.value)}
-              className="w-full bg-[#eee]  px-[18px] py-[13px] outline-none  "
-              placeholder="Enter Destination"
-            ></input>
+            <div>
+              <input
+                onChange={(e: any) => {
+                  getSuggestions(e.target.value, false);
+                  setDestinationLocation(e.target.value);
+                }}
+                className="w-full bg-[#eee]  px-[18px] py-[13px] outline-none  "
+                placeholder="Enter Destination"
+                value={destinationLocation}
+              ></input>
+              <AddressSuggestions
+                classAttribute={"absolute  "}
+                setInput={setDestinationLocation}
+                onSelectSuggestion={(address: string) => {
+                  handleSelectSuggestion(address, false);
+                }}
+                suggestions={DestinationSuggestions}
+              />
+            </div>
             <button
-              onClick={() => console.log(myLocation, destinationLocation)}
+              onClick={() => console.log(Suggestions, destinationLocation)}
             >
               Click me
             </button>
           </div>
         </motion.div>
       </motion.div>
-      {/* Third Motion where the history of search location comes from bottom*/}
+
       <motion.div
         initial={{ y: 0 }}
         animate={{
@@ -165,7 +268,7 @@ export const HomePage = () => {
           look For ride
         </button>
       </motion.div>
-      {/* Choose your ride */}
+
       <motion.div
         className={`${!vechPanel ? "hidden" : ""} `}
         initial={{ y: 0 }}
@@ -178,6 +281,7 @@ export const HomePage = () => {
           panelClose={setopenPanel}
           closeRide={setvechPanel}
           rideConfirmedFun={rideConfirmedFunc}
+          setvehicleDetails={setvehicleDetails}
         />
       </motion.div>
 
@@ -189,11 +293,14 @@ export const HomePage = () => {
           duration: 0.6,
         }}
       >
-        <ConfirmYourRide backHome={rideConfirmedFunc} />
+        <ConfirmYourRide
+          handleClick={createRide}
+          origin={pickupLocation}
+          destination={destinationLocation}
+          backHome={rideConfirmedFunc}
+          cashFee={"f"}
+        />
       </motion.div>
     </section>
   );
 };
-{
-  /* <div className="line absolute top-[5.5rem] left-[3.2rem] h-[2.9rem] w-[2px] bg-black"></div> */
-}

@@ -32,7 +32,7 @@ const rideSchema = new Schema<IRide>({
   },
   vehicleType: {
     type: String,
-    enum: ["car", "bike", "auto"],
+    enum: ["OlaGo", "olaChopper", "olaTukTuk", "olaMoto"],
   },
   duration: {
     type: Number,

@@ -25,7 +25,6 @@ const CaptainProtectWrapper = ({ children }: any) => {
 
       .then((response) => {
         if (response.status === 200) {
-          console.log("ghello");
           setIsLoading(false);
         }
       })

@@ -34,7 +34,6 @@ export const Login = ({ userType }: { userType: string }) => {
       );
       //@ts-ignore
       localStorage.setItem("token", userResponse.data?.data);
-
       navigate("/home");
     }
   }

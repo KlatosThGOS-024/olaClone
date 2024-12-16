@@ -42,7 +42,7 @@ const getCoordinates = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
 
-  const location = data.results[0].geometry.location;
+  const location = data.results[0];
   const { lat, lng } = location;
 
   res
@@ -57,9 +57,13 @@ const getCoordinates = asyncHandler(async (req: Request, res: Response) => {
 });
 const getDistanceAndTime = asyncHandler(async (req: Request, res: Response) => {
   const { origin, destination } = req.query;
-  console.log(origin, destination);
+
   if (!origin || !destination) {
-    const response = new ApiError(404, "Address parameter is required1.");
+    const response = new ApiError(
+      404,
+      "Address parameter is required1.",
+      req.query
+    );
     res.status(400).send(response);
     return;
   }
@@ -74,9 +78,8 @@ const getDistanceAndTime = asyncHandler(async (req: Request, res: Response) => {
   )}&key=${apikey}`;
 
   const response = await fetch(url, { method: "GET" });
-  console.log(response);
   const data = await response.json();
-  console.log(data);
+
   if (!response.ok || data.rows[0].elements[0].status === "ZERO_RESULTS") {
     res
       .status(response.status)
@@ -100,9 +103,6 @@ const getDistanceAndTime = asyncHandler(async (req: Request, res: Response) => {
         "Successfully retrieved the distance and time"
       )
     );
-  // console.log(await response)
-  // const data = await response.json();
-  // console.log(data)
 });
 const getSuggestions = asyncHandler(async (req: Request, res: Response) => {
   const address = req.query.address as string;
