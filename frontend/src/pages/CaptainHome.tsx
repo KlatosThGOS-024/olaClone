@@ -2,12 +2,18 @@ import { useState } from "react";
 
 import { CaptainDetails } from "../components/CaptainDetails";
 import { MenuBar } from "../components/MenuBar";
-import { motion } from "framer-motion";
+import { socket } from "../App";
 
 export const CaptainHome = () => {
   const [menuPanel, setMenuPanel] = useState(false);
   const [closedUserDetailPanel, setClosedUserDetailPanel] = useState(false);
-
+  const [notifications, setNotifications] = useState(0);
+  socket.on("ride-requested", () => {
+    setNotifications((notifications: number) => {
+      return (notifications += 1);
+    });
+    console.log(notifications);
+  });
   const openMenu = () => {
     setMenuPanel(!menuPanel);
   };

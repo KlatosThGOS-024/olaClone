@@ -139,6 +139,7 @@ const getPendingRideByUser = (0, asyncHandler_1.default)((req, res) => __awaiter
 }));
 exports.getPendingRideByUser = getPendingRideByUser;
 const getPendingRideByCaptain = (0, asyncHandler_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("hello");
     const getRide = yield ride_models_1.default.find({
         status: "pending",
     });

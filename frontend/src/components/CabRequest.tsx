@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { socket } from "../App";
 
 const data = [
   {
@@ -20,9 +20,46 @@ type RideType = {
   status: string;
 };
 export const CabRequest = () => {
-  const [rideDetails, setRideDetials] = useState(["676049ee76203cfbd2d928a1"]);
-  const [isLoading, setIsloading] = useState(true);
-  const [userData, setuserData] = useState<string[]>([]);
+  var [rideDetails, setRideDetails] = useState<RideType[]>([]);
+  const [userDetails, setUserDetails] = useState([]);
+  let notNew = false;
+  // console.log("New ride received:", message);
+  // setRideDetails((prevRideDetails) => {
+
+  //   return [...prevRideDetails, message];
+  // });
+  // return () => {
+  //   socket.off("ride-requested");
+  // };
+  const initialFetchDone = useRef(false);
+
+  socket.on("ride-requested", (message) => {
+    setRideDetails((prevRideDetails) => {
+      return [...prevRideDetails, message];
+    });
+
+    rideDetails = [...new Set(rideDetails)];
+    return () => {
+      socket.off("ride-requested");
+    };
+  });
+
+  useEffect(() => {
+    if (!initialFetchDone.current) {
+      getRides();
+      initialFetchDone.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (rideDetails.length > 0) {
+      console.log("Processing updated rideDetails:", rideDetails);
+      rideDetails.forEach((ride) => {
+        console.log("Ride user:", ride.user);
+      });
+    }
+  }, [rideDetails]);
+
   const getRides = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -37,56 +74,35 @@ export const CabRequest = () => {
       const data = await response.json();
       console.log(data);
       if (data.data && data.data.length > 0) {
-        // setRideDetials(data.data);   console.log(data);
+        console.log(data.data);
+        setRideDetails((prevRideDetails) => [...prevRideDetails, ...data.data]);
       }
     } catch (error) {
       console.error("Error", error);
-      setIsloading(false);
     }
   };
+  /////////////////////////////
   const getUserProfile = async (userId: string) => {
     try {
-      const token = localStorage.getItem("token");
-      const url = `http://localhost:3000/api/v1/captain/user-profile`;
+      const url = `http://localhost:3000/api/v1/user/user-profile`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(userId),
       });
+      console.log(userId);
       const data = await response.json();
+
       console.log(data);
     } catch (error) {
       console.error("Error", error);
-      setIsloading(false);
     }
   };
 
-  useEffect(() => {
-    getRides();
-  }, []);
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userData = await Promise.all(
-        rideDetails.map(async (value) => {
-          return await getUserProfile(value);
-        })
-      );
-      //@ts-ignore
-      setuserData(userData);
-      console.log(userData);
-    };
-
-    fetchUserData();
-  }, [rideDetails]);
-
-  setInterval(() => {
-    console.log(userData);
-  }, 5000);
-
   return (
+    <div>hello</div>
     // <section className="  absolute top-0 bg-gray-300 w-full space-y-[18px] ">
     //   {rideDetails.map((value) => (
     //     <div
@@ -147,6 +163,5 @@ export const CabRequest = () => {
     //     </div>
     //   ))}
     // </section>
-    <div>hello</div>
   );
 };

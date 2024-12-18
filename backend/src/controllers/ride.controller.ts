@@ -157,6 +157,7 @@ const getPendingRideByUser = asyncHandler(
 );
 const getPendingRideByCaptain = asyncHandler(
   async (_: Request, res: Response) => {
+    console.log("hello");
     const getRide = await Ride.find({
       status: "pending",
     });

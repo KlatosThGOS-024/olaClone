@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { socket } from "../App";
 type RideType = {
   pickupLocation: string;
   destinationLocation: string;
@@ -7,17 +8,23 @@ type RideType = {
   _id: string;
   status: string;
 };
-import { motion } from "framer-motion";
+
 export const Riding = () => {
   const [rideDetails, setRideDetials] = useState<RideType>();
-  const [isLoading, setIsloading] = useState(true);
-  const getAcceptedRide = async () => {
+  const [rideAccepted, setsetIsloading] = useState(false);
+  const value = useRef(rideDetails);
+  useEffect(() => {
+    if (value.current != rideDetails) {
+      console.log("A ride has been initiated", rideDetails);
+      socket.emit("ride-requested", rideDetails);
+    }
+  }, [rideDetails]);
+  const getPendingRide = async () => {
     try {
       const token = localStorage.getItem("token");
       const url = `http://localhost:3000/api/v1/ride/user-ride/pending`;
       const response = await fetch(url, {
         method: "GET",
-
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -31,30 +38,21 @@ export const Riding = () => {
       }
     } catch (error) {
       console.error("Error", error);
-      setIsloading(false);
     }
   };
 
   useEffect(() => {
-    getAcceptedRide();
+    getPendingRide();
   }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (!rideDetails) {
-    return <p>No Ride found please Refresh if you made a ride</p>;
-  }
 
   return (
     <section>
-      <div className=" ">
+      hello
+      {/* <div className=" ">
         <img src="../../public\images\carRiding.gif"></img>
       </div>
 
       <div>
-        <motion.div></motion.div>
-
         <div className=" mt-[18px] mx-[28px]">
           <div className=" flex space-x-[16px] items-center">
             <img
@@ -106,7 +104,7 @@ export const Riding = () => {
       rext-[18px] font-[600]"
       >
         Make Payment
-      </button>
+      </button> */}
     </section>
   );
 };

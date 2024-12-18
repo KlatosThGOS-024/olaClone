@@ -1,5 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { StartPage } from "./pages/StartPage";
 import { UserSignupPage } from "./pages/UserSignupPage";
 import { UserLogin } from "./pages/UserLogin";
@@ -12,7 +12,9 @@ import { CaptainHome } from "./pages/CaptainHome";
 import { Riding } from "./pages/RidingPage";
 import { CabRequest } from "./components/CabRequest";
 import { FinishRide } from "./components/FinishRide";
+import { io } from "socket.io-client";
 
+const socket = io("http://localhost:3000");
 function App() {
   return (
     <BrowserRouter>
@@ -41,4 +43,4 @@ function App() {
   );
 }
 // MaliNa123@!
-export default App;
+export { socket, App };

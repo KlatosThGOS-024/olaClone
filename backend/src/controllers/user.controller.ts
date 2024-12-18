@@ -67,7 +67,8 @@ const userLogin = asyncHandler(async (req: Request, res: Response) => {
     .send(new ApiResponse(200, accessToken, "Successfully login"));
 });
 const userProfile = asyncHandler(async (req: Request, res: Response) => {
-  const user = req.user;
+  const userId = req.body.userId;
+  const user = await User.findById(userId);
   res
     .status(200)
     .send(new ApiResponse(200, user, "User Profile Successfully retrevied"));

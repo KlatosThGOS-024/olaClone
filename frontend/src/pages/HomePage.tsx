@@ -5,7 +5,8 @@ import ChooseYourRide from "../components/ChooseYourRide";
 import { ConfirmYourRide } from "../components/ConfirmYourRide";
 import { AddressSuggestions } from "../components/AddressSuggestions";
 
-// Sjernf@!34
+// user Sjernf@!34
+// securePassword123@
 
 export const HomePage = () => {
   const [openPanel, setopenPanel] = useState(false);
