@@ -1,18 +1,27 @@
 import mongoose, { model, Model, Schema } from "mongoose";
 import { IRide } from "../types/ride.types";
 import bcrypt from "bcrypt";
-
+// type: mongoose.Schema.Types.ObjectId,
+//     required: true,
+//     ref: "User",
 const rideSchema = new Schema<IRide>({
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "User",
+  },
+  passengerName: {
+    type: String,
+    required: true,
+  },
+  passengerImage: {
+    type: String,
+    required: true,
   },
   pickupLocation: {
     type: String,
     required: true,
   },
-  // Sjernf@!34
   destinationLocation: {
     type: String,
     required: true,
@@ -40,18 +49,18 @@ const rideSchema = new Schema<IRide>({
   distance: {
     type: Number,
   },
-  paymentID: {
+  paymentId: {
     type: String,
   },
-  oderId: {
+  orderId: {
     type: String,
   },
-  signautre: {
+  signature: {
     type: String,
   },
   otp: {
     type: String,
-    require: true,
+
     select: false,
   },
 });

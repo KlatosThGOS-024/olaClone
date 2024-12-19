@@ -110,7 +110,7 @@ const calculateFare = async ({
 
 const createRide = asyncHandler(async (req: Request, res: Response) => {
   const rideData = rideCreateSchema.safeParse(req.body);
-
+  const user = req.user;
   if (!rideData.success || !req.user) {
     res
       .status(400)
@@ -118,7 +118,6 @@ const createRide = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
 
-  //@ts-ignore
   const {
     vehicle,
     pickupLocation,
@@ -140,6 +139,9 @@ const createRide = asyncHandler(async (req: Request, res: Response) => {
     pickupLocation,
     destinationLocation,
     fare,
+    passengerName: user.firstName + " " + user.lastName,
+    passengerImage: user.firstName,
+    userId: user._id,
   });
   const otp = await rideCreate.generateOTP();
   console.log(otp);

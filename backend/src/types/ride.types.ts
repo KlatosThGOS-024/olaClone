@@ -2,8 +2,11 @@ import mongoose from "mongoose";
 import { z } from "zod";
 
 export interface IRide extends Document {
-  user: mongoose.Schema.Types.ObjectId;
+  userId: mongoose.Schema.Types.ObjectId;
   pickupLocation: string;
+  passengerName: string;
+  paymentId: string;
+  passengerImage: string;
   destinationLocation: string;
   fare: Number;
   captain: mongoose.Schema.Types.ObjectId;
@@ -11,8 +14,8 @@ export interface IRide extends Document {
   status: string;
   distance: Number;
   paymentID: string;
-  oderId: string;
-  signautre: string;
+  orderId: string;
+  signature: string;
   vehicleType: string;
   otp: string;
   generateOTP(): any;

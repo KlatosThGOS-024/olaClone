@@ -68,6 +68,7 @@ const userLogin = asyncHandler(async (req: Request, res: Response) => {
 });
 const userProfile = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.body.userId;
+  console.log("userssfsdfsdfdfsdfsdf", userId);
   const user = await User.findById(userId);
   res
     .status(200)

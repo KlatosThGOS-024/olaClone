@@ -11,7 +11,7 @@ type RideType = {
 
 export const Riding = () => {
   const [rideDetails, setRideDetials] = useState<RideType>();
-  const [rideAccepted, setsetIsloading] = useState(false);
+  const [rideAccepted, setRideAccepted] = useState(false);
   const value = useRef(rideDetails);
   useEffect(() => {
     if (value.current != rideDetails) {
@@ -40,18 +40,20 @@ export const Riding = () => {
       console.error("Error", error);
     }
   };
-
+  useEffect(() => {
+    if (!rideDetails) {
+      return <div>No ride accpeted wait</div>;
+    }
+  }, [rideAccepted]);
   useEffect(() => {
     getPendingRide();
   }, []);
 
   return (
     <section>
-      hello
-      {/* <div className=" ">
+      <div>
         <img src="../../public\images\carRiding.gif"></img>
       </div>
-
       <div>
         <div className=" mt-[18px] mx-[28px]">
           <div className=" flex space-x-[16px] items-center">
@@ -104,7 +106,7 @@ export const Riding = () => {
       rext-[18px] font-[600]"
       >
         Make Payment
-      </button> */}
+      </button>
     </section>
   );
 };

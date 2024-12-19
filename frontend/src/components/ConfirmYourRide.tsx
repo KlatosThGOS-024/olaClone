@@ -1,12 +1,37 @@
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../App";
+type RideType = {
+  pickupLocation: string;
+  destinationLocation: string;
+  fare: string;
+  user: string;
+  _id: string;
+  status: string;
+};
 
 export const ConfirmYourRide = ({
   backHome,
   origin,
   destination,
-  cashFee,
   handleClick,
 }: any) => {
+  const [rideConfirmed, setRideConfirmed] = useState(false);
+  const [rideAccepted, setRideAccepted] = useState(false);
+  const [rideDetails, setRideDetials] = useState<RideType>();
+  const value = useRef(rideConfirmed);
+  useEffect(() => {
+    if (value.current != rideConfirmed) {
+      console.log("A ride has been initiated", rideDetails);
+      socket.emit("ride-requested", rideDetails);
+      socket.on("ride-accepted", (message) => {
+        setRideAccepted(() => {
+          return !rideAccepted;
+        });
+      });
+    }
+  }, [rideAccepted]);
+
   const navigate = useNavigate();
   return (
     <section className=" px-3 py-[16px] absolute space-y-5 bottom-0 w-full bg-white">
@@ -64,6 +89,9 @@ export const ConfirmYourRide = ({
       </div>
       <button
         onClick={() => {
+          setRideConfirmed(() => {
+            return !rideConfirmed;
+          });
           handleClick();
           navigate("/user/ride");
         }}

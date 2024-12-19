@@ -74,6 +74,7 @@ const userLogin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, vo
 exports.userLogin = userLogin;
 const userProfile = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.body.userId;
+    console.log("userssfsdfsdfdfsdfsdf", userId);
     const user = yield user_models_1.default.findById(userId);
     res
         .status(200)

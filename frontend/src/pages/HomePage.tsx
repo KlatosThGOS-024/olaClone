@@ -36,7 +36,7 @@ export const HomePage = () => {
     setvechPanel(!vechPanel);
   };
   const createRide = async () => {
-    const url = `http://localhost:3000/api/v1/ride/user-ride`;
+    const createRideUrl = `http://localhost:3000/api/v1/ride/user-ride`;
     const data = {
       vehicle: vehicleDetails.vehicleName,
       pickupLocation,
@@ -46,7 +46,7 @@ export const HomePage = () => {
     };
     const token = localStorage.getItem("token");
     console.log(token);
-    const response = await fetch(url, {
+    const response = await fetch(createRideUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

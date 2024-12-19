@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { socket } from "../App";
+import { Link } from "react-router-dom";
 
 const data = [
   {
@@ -18,47 +19,34 @@ type RideType = {
   user: string;
   _id: string;
   status: string;
+  userId?: string;
+  passengerName: string;
+  passengerImage: string;
+  username: string;
 };
+
 export const CabRequest = () => {
   var [rideDetails, setRideDetails] = useState<RideType[]>([]);
-  const [userDetails, setUserDetails] = useState([]);
-  let notNew = false;
-  // console.log("New ride received:", message);
-  // setRideDetails((prevRideDetails) => {
 
-  //   return [...prevRideDetails, message];
-  // });
-  // return () => {
-  //   socket.off("ride-requested");
-  // };
-  const initialFetchDone = useRef(false);
+  useEffect(() => {
+    getRides();
+  }, [rideDetails]);
 
   socket.on("ride-requested", (message) => {
     setRideDetails((prevRideDetails) => {
       return [...prevRideDetails, message];
     });
 
-    rideDetails = [...new Set(rideDetails)];
+    setRideDetails((rideDetails) => {
+      return (rideDetails = Array.from(
+        new Map(rideDetails.map((item) => [item._id, item])).values()
+      ));
+    });
+
     return () => {
       socket.off("ride-requested");
     };
   });
-
-  useEffect(() => {
-    if (!initialFetchDone.current) {
-      getRides();
-      initialFetchDone.current = true;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (rideDetails.length > 0) {
-      console.log("Processing updated rideDetails:", rideDetails);
-      rideDetails.forEach((ride) => {
-        console.log("Ride user:", ride.user);
-      });
-    }
-  }, [rideDetails]);
 
   const getRides = async () => {
     try {
@@ -72,96 +60,78 @@ export const CabRequest = () => {
         },
       });
       const data = await response.json();
-      console.log(data);
       if (data.data && data.data.length > 0) {
-        console.log(data.data);
         setRideDetails((prevRideDetails) => [...prevRideDetails, ...data.data]);
+        setRideDetails((rideDetails) => {
+          return (rideDetails = Array.from(
+            new Map(rideDetails.map((item) => [item._id, item])).values()
+          ));
+        });
       }
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
-  /////////////////////////////
-  const getUserProfile = async (userId: string) => {
-    try {
-      const url = `http://localhost:3000/api/v1/user/user-profile`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userId),
-      });
-      console.log(userId);
-      const data = await response.json();
-
-      console.log(data);
     } catch (error) {
       console.error("Error", error);
     }
   };
 
   return (
-    <div>hello</div>
-    // <section className="  absolute top-0 bg-gray-300 w-full space-y-[18px] ">
-    //   {rideDetails.map((value) => (
-    //     <div
-    //       key={"../../public/images/olaDriver.png"}
-    //       className="bg-white px-[18px] py-[28px] space-y-3  "
-    //     >
-    //       <div className=" bg-gray-300 px-2 py-3 rounded-xl flex items-center space-x-6 ">
-    //         <img
-    //           className=" w-[62px]"
-    //           src={"../../public/images/olaDriver.png"}
-    //         ></img>
-    //         <div className=" flex flex-col justify-center">
-    //           <span className=" ml-2 mb-1 text-[18px] font-semibold">
-    //             {value.passengerName}
-    //           </span>
-    //           <p className=" space-x-2">
-    //             <span className=" font-semibold text-[14px] bg-yellow-400 text-black rounded-full px-[12px] py-[3px]">
-    //               {value.offers[0].offer1}
-    //             </span>
-    //             <span className=" bg-yellow-400 text-black font-semibold text-[14px] rounded-full px-[12px] py-[3px]">
-    //               {value.offers[0].offer2}
-    //             </span>
-    //           </p>
-    //         </div>
-    //         <p className=" text-[18px] font-semibold"> {value.cabPrice}</p>
-    //       </div>
-    //       <div className=" ">
-    //         <p className=" text-gray-400 text-[16px]">PickUp Location</p>
-    //         <p className=" text-black font-semibold text-[22px]">
-    //           {value.pickUpLocation}
-    //         </p>
-    //       </div>
-    //       <div>
-    //         <p className=" text-gray-400 text-[16px]">Drop Location</p>
-    //         <p className=" text-black font-semibold text-[22px]">
-    //           {value.dropLocation}
-    //         </p>
-    //       </div>
-    //       <div className=" space-y-3">
-    //         <Link to={"/captain/ride"}>
-    //           {" "}
-    //           <button
-    //             className=" bg-yellow-400 px-4 py-3
-    //          text-black font-semibold rounded-xl w-full
-    //   rext-[24px] "
-    //           >
-    //             Confirm
-    //           </button>
-    //         </Link>
-    //         <button
-    //           className=" bg-red-600 px-4 py-3
-    //          text-black font-semibold rounded-xl w-full
-    //   rext-[24px] "
-    //         >
-    //           Cancel
-    //         </button>
-    //       </div>
-    //     </div>
-    //   ))}
-    // </section>
+    <section className="  absolute top-0 bg-gray-300 w-full space-y-[18px] ">
+      {rideDetails.map((value: RideType) => (
+        <div
+          key={value._id}
+          className="bg-white px-[18px] py-[28px] space-y-3  "
+        >
+          <div className=" bg-gray-300 px-2 py-3 rounded-xl flex items-center space-x-6 ">
+            <img
+              className=" w-[62px]"
+              src={"../../public/images/olaDriver.png"}
+            ></img>
+            <div className=" flex flex-col justify-center">
+              <span className=" ml-2 mb-1 text-[18px] font-semibold">
+                {value.passengerName}
+              </span>
+              <p className=" space-x-2">
+                <span className=" font-semibold text-[14px] bg-yellow-400 text-black rounded-full px-[12px] py-[3px]">
+                  {data[0].offers[0].offer1}
+                </span>
+                <span className=" bg-yellow-400 text-black font-semibold text-[14px] rounded-full px-[12px] py-[3px]">
+                  {data[0].offers[0].offer2}
+                </span>
+              </p>
+            </div>
+            <p className=" text-[18px] font-semibold"> {}</p>
+          </div>
+          <div className=" ">
+            <p className=" text-gray-400 text-[16px]">PickUp Location</p>
+            <p className=" text-black font-semibold text-[22px]">
+              {value.pickupLocation}
+            </p>
+          </div>
+          <div>
+            <p className=" text-gray-400 text-[16px]">Drop Location</p>
+            <p className=" text-black font-semibold text-[22px]">
+              {value.destinationLocation}
+            </p>
+          </div>
+          <div className=" space-y-3">
+            <Link to={"/captain/ride"}>
+              <button
+                className=" bg-yellow-400 px-4 py-3
+             text-black font-semibold rounded-xl w-full
+      rext-[24px] "
+              >
+                Confirm
+              </button>
+            </Link>
+            <button
+              className=" bg-red-600 px-4 py-3
+             text-black font-semibold rounded-xl w-full
+      rext-[24px] "
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ))}
+    </section>
   );
 };
