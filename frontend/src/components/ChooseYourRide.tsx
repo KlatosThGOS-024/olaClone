@@ -1,27 +1,29 @@
+import { VehicleDetails } from "../assets/Type";
+
 const data = [
   {
-    imgSrc: "../../public/images/olaGo.jpg",
+    imgSrc: "/images/olaGo.jpg",
     vechName: "OlaGo",
     description: "Affordable, Compact rides",
     price: "₹193",
     timing: "2 Min aways",
   },
   {
-    imgSrc: "../../public/images/olaChopper.png",
+    imgSrc: "/images/olaChopper.png",
     vechName: "olaChopper",
     description: "Not Affordable, Tera Ghar jayega",
     price: "₹100000",
     timing: "1 Min aways",
   },
   {
-    imgSrc: "../../public/images/olaTukTuk.png",
+    imgSrc: "/images/olaTukTuk.png",
     vechName: "olaTukTuk",
     description: "Very Affordable, Compact rides",
     price: "₹193.5",
     timing: "20 Min aways",
   },
   {
-    imgSrc: "../../public/images/uberMoto.png",
+    imgSrc: "/images/uberMoto.png",
     vechName: "olaMoto",
     description: "Affordable, MotorCycle rides",
     price: "₹165",
@@ -34,10 +36,10 @@ const ChooseYourRide = ({
   rideConfirmedFun,
   setvehicleDetails,
 }: {
-  panelClose: any;
-  closeRide: any;
-  rideConfirmedFun: any;
-  setvehicleDetails: any;
+  panelClose: React.Dispatch<React.SetStateAction<boolean>>;
+  closeRide: React.Dispatch<React.SetStateAction<boolean>>;
+  rideConfirmedFun: () => void;
+  setvehicleDetails: React.Dispatch<React.SetStateAction<VehicleDetails>>;
 }) => {
   const onClickHandler = () => {
     if (rideConfirmedFun) {
@@ -45,11 +47,11 @@ const ChooseYourRide = ({
     }
   };
   const closePanel = () => {
-    panelClose((value: any) => {
-      !value;
+    panelClose((value: boolean) => {
+      return !value;
     }),
-      closeRide((value: any) => {
-        !value;
+      closeRide((value: boolean) => {
+        return !value;
       });
   };
   return (
@@ -58,11 +60,11 @@ const ChooseYourRide = ({
         <img
           onClick={closePanel}
           className=" cursor-pointer w-[42px] "
-          src=" ../../public/images/remove.png"
+          src=" /images/remove.png"
         />
       </div>
       <p className=" bg-[#eee] w-fit rounded-full mx-4  px-[12px] py-[6px] flex gap-2">
-        <img className=" w-[20px]" src="../../public/images/clock.png"></img>
+        <img className=" w-[20px]" src="/images/clock.png"></img>
         <span className=" font-[500] text-black">Leave now</span>
       </p>
       <div className=" flex flex-col space-y-3 py-3 px-2 mx-[2px]">

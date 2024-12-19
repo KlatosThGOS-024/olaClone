@@ -1,3 +1,4 @@
+import mongoose, { Document } from "mongoose";
 import { z } from "zod";
 
 export interface ICaptain extends Document {
@@ -12,7 +13,18 @@ export interface ICaptain extends Document {
   status: string;
   vehicle: string;
   accessToken: string;
+  location: {
+    lat: number;
+
+    lang: number;
+  };
+  rides: {
+    cancelled: mongoose.Types.ObjectId[];
+    ongoing: mongoose.Types.ObjectId[];
+    completed: mongoose.Types.ObjectId[];
+  };
 }
+
 const captainCreateSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),

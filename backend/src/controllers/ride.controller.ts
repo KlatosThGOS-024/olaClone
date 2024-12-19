@@ -64,50 +64,6 @@ const calculateFare = async ({
   }
 };
 
-// const calculateFare = async ({
-//   vehicle,
-//   distance,
-//   time,
-//   vechilePrice,
-// }: {
-//   vehicle: RideCreateData["vehicle"];
-//   distance: number;
-//   time: number;
-//   vechilePrice: number;
-// }): Promise<number | string> => {
-//   try {
-
-//     let farePerKm: number;
-//     let timeChargePerMinute: number;
-
-//     switch (vehicle) {
-//       case "car":
-//         farePerKm = 10;
-//         timeChargePerMinute = 2;
-//         break;
-//       case "bike":
-//         farePerKm = 5;
-//         timeChargePerMinute = 1;
-//         break;
-//       case "auto":
-//         farePerKm = 8;
-//         timeChargePerMinute = 1.5;
-//         break;
-//       default:
-//         return "Invalid vehicle type.";
-//     }
-
-//     const distanceFare = distance * farePerKm;
-//     const timeFare = time * timeChargePerMinute;
-//     const totalFare = vechilePrice + distanceFare + timeFare;
-
-//     return Math.round(totalFare);
-//   } catch (error: any) {
-//     console.error("Error calculating fare:", error.message);
-//     return "Failed to calculate fare.";
-//   }
-// };
-
 const createRide = asyncHandler(async (req: Request, res: Response) => {
   const rideData = rideCreateSchema.safeParse(req.body);
   const user = req.user;
@@ -150,20 +106,43 @@ const createRide = asyncHandler(async (req: Request, res: Response) => {
 const getPendingRideByUser = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user._id?.toString();
+    console.log(userId);
     const getRide = await Ride.find({
-      user: userId,
       status: "pending",
     });
-    res.send(new ApiResponse(200, getRide, "Successfully Get the Ride"));
+    res
+      .status(200)
+      .send(new ApiResponse(200, getRide, "Successfully Get the Ride"));
   }
 );
+
+const getOngoingRide = asyncHandler(async (req: Request, res: Response) => {
+  const { rideId } = req.query;
+  if (!rideId) {
+    res
+      .status(400)
+      .send(new ApiError(400, "Error while getting the rideId", rideId));
+  }
+
+  const getRide = await Ride.findById(rideId);
+  if (!getRide) {
+    res
+      .status(400)
+      .send(new ApiError(400, "Error while getting the Ride", getRide));
+  }
+  res.send(new ApiResponse(200, getRide, "Successfully Get the Ride"));
+});
 const getPendingRideByCaptain = asyncHandler(
   async (_: Request, res: Response) => {
-    console.log("hello");
     const getRide = await Ride.find({
       status: "pending",
     });
     res.send(new ApiResponse(200, getRide, "Successfully Get the Ride"));
   }
 );
-export { createRide, getPendingRideByUser, getPendingRideByCaptain };
+export {
+  createRide,
+  getPendingRideByUser,
+  getPendingRideByCaptain,
+  getOngoingRide,
+};

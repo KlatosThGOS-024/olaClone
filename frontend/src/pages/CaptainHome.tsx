@@ -22,17 +22,17 @@ export const CaptainHome = () => {
   };
   return (
     <section className="overflow-y-hidden relative">
-      <img src="../../public/images/captainMap.png" alt="Captain Map" />
+      <img src="/images/captainMap.png" alt="Captain Map" />
       <img
         onClick={openMenu}
         className=" cursor-pointer w-[28px] absolute top-[28px] left-[28px]"
-        src="../../public/images/menu.png "
+        src="/images/menu.png "
       ></img>
       <p className=" rounded-full absolute top-0 right-0 my-[18px] ">
         <img
           onClick={() => openUserDetails()}
           className=" cursor-pointer w-[64px]"
-          src="../../public/images/userImg-removebg-preview.png"
+          src="/images/userImg-removebg-preview.png"
         ></img>
       </p>
       <MenuBar openMenu={openMenu} isOpen={menuPanel} />

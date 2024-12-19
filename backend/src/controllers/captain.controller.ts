@@ -9,6 +9,7 @@ import {
   ICaptain,
 } from "../types/captain.types";
 import User from "../models/user.models";
+import Ride from "../models/ride.models";
 const generateAccessToken = async (captain: ICaptain) => {
   const accessToken = await captain.generateAccessTokenMethod();
   return accessToken;
@@ -116,6 +117,36 @@ const userProfileFromCaptain = asyncHandler(
       );
   }
 );
+const updateCaptainOngoin = asyncHandler(
+  async (req: Request, res: Response) => {
+    const captainId = req.captain;
+    const rideId = req.body;
+    const findRide = await Ride.findByIdAndUpdate(rideId, {
+      captain: captainId,
+    });
+    if (findRide) {
+      const updateCaptainData = await Captain.findByIdAndUpdate(captainId, {
+        ongoingRide: [rideId],
+      });
+      if (updateCaptainData) {
+        res.status(200).send(new ApiResponse(200, "Captain is now riding"));
+      } else {
+        res
+          .status(400)
+          .send(
+            new ApiError(
+              400,
+              "Something went wrong while updating captain ongoing"
+            )
+          );
+      }
+    } else {
+      res
+        .status(400)
+        .send(new ApiError(400, "Something went wrong while Ride"));
+    }
+  }
+);
 const captainLogout = asyncHandler(async (req: Request, res: Response) => {
   const captain = req.captain;
   captain.status = "inactive";
@@ -131,4 +162,5 @@ export {
   captainLogout,
   captainProfile,
   userProfileFromCaptain,
+  updateCaptainOngoin,
 };

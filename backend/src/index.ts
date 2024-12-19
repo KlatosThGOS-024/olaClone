@@ -33,8 +33,8 @@ io.on("connection", (socket) => {
     io.emit("ride-requested", message);
     console.log("user message:", message);
   });
-  socket.on("welcome 2", (message) => {
-    io.emit("welcome 2", message);
+  socket.on("ride-accepted", (message) => {
+    io.emit("ride-accepted", message);
   });
   socket.on("disconnect", () => {
     console.log("A client disconnected:", socket.id);

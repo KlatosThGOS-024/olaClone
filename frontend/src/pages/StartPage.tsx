@@ -2,14 +2,20 @@ import { Link } from "react-router-dom";
 
 export const StartPage = () => {
   return (
-    <section>
-      <div className=" w-full grid grid-rows-2 ">
-        <img src="../../public/images/carImage.png" className=" w-full" />
+    <section className="relative w-full my-[14px] h-[97vh] py-[14px] overflow-y-hidden ">
+      <div className=" w-[440px] grid grid-rows-2 mx-auto  ">
+        <img src="/images/backGroundImage.avif" className="w-full h-[600px]" />
+
         <div className=" p-[24px] ">
+          <div className=" absolute top-[18px] ">
+            <a href="#">
+              <img src="/images/olaLogo.png" className="w-[64px]" />
+            </a>
+          </div>
           <h1 className=" text-[24px] font-semibold ">
             Explore new ways to<br></br> travel with Ola
           </h1>
-          <div className=" flex flex-col space-y-5 mt-[28px]">
+          <div className=" flex flex-col space-y-5 mt-[28px] ">
             <button className=" bg-black text-white px-[18px] rounded-lg py-[12px] ">
               <Link to={"/user/signUp"}> Continue with Phone Number</Link>
             </button>
@@ -71,10 +77,14 @@ export const StartPage = () => {
                 <span>Facebook</span>
               </button>
             </div>
-            <p className=" text-gray-400">
+            <p className=" text-gray-400 ">
               By continuing, you agree that you have read and accept our
-              <a href="#"> T&Cs</a> and{" "}
-              <a href="#" className=" border-b-[1px] ">
+              <a href="#" className="hover:text-blue-400 hover:underline">
+                {" "}
+                T&Cs{" "}
+              </a>
+              <span>and</span>{" "}
+              <a href="#" className="hover:text-blue-400 hover:underline  ">
                 Privacy Policy
               </a>
             </p>

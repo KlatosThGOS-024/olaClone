@@ -17,52 +17,63 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ApiError_1 = __importDefault(require("../utils/ApiError"));
 const user_models_1 = __importDefault(require("../models/user.models"));
 const captain_models_1 = __importDefault(require("../models/captain.models"));
-const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    try {
-        const jwtToken = ((_a = req.headers) === null || _a === void 0 ? void 0 : _a.authorization) || req.cookies.accessToken;
-        console.log(jwtToken);
-        const token = jwtToken.split("Bearer")[1].split(" ")[1];
-        const decodedToken = jsonwebtoken_1.default.verify(token, "process.env.accessTokenSecret");
-        //@ts-ignore
-        const id = decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken._id;
-        const user = yield user_models_1.default.findById(id).select("-password");
-        if (!user) {
-            const data = new ApiError_1.default(400, "No User Found with this token");
-            res.status(400).send(data);
-            return;
+const userAuth = (req, res, next) => {
+    (() => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b;
+        try {
+            const jwtToken = ((_a = req.headers) === null || _a === void 0 ? void 0 : _a.authorization) || ((_b = req.cookies) === null || _b === void 0 ? void 0 : _b.accessToken);
+            if (!jwtToken) {
+                return next(new ApiError_1.default(400, "Token not provided."));
+            }
+            const token = jwtToken.startsWith("Bearer ")
+                ? jwtToken.split("Bearer ")[1]
+                : jwtToken;
+            if (!token) {
+                return next(new ApiError_1.default(400, "Invalid token format."));
+            }
+            const decodedToken = jsonwebtoken_1.default.verify(token, "process.env.accessTokenSecret");
+            const userId = decodedToken._id;
+            const user = yield user_models_1.default.findById(userId).select("-password");
+            if (!user) {
+                return next(new ApiError_1.default(400, "No User Found with this token."));
+            }
+            req.user = user;
+            next();
         }
-        req.user = user;
-        next();
-    }
-    catch (error) {
-        const data = new ApiError_1.default(400, "Un-Authorized Access", [], error.error);
-        res.status(400).send(data);
-        return;
-    }
-});
+        catch (error) {
+            console.error("Authorization error:", error.message || error);
+            next(new ApiError_1.default(400, "Un-Authorized Access", [], error.error));
+        }
+    }))();
+};
 exports.userAuth = userAuth;
-const captainAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    try {
-        const jwtToken = ((_b = req.headers) === null || _b === void 0 ? void 0 : _b.authorization) || req.cookies.accessToken;
-        const token = jwtToken.split("Bearer")[1].split(" ")[1];
-        const decodedToken = jsonwebtoken_1.default.verify(token, "process.env.accessTokenSecret");
-        //@ts-ignore
-        const id = decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken._id;
-        const captain = yield captain_models_1.default.findById(id).select("-password");
-        if (!captain) {
-            const data = new ApiError_1.default(400, "No Captain Found with this token");
-            res.status(400).send(data);
-            return;
+const captainAuth = (req, res, next) => {
+    (() => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b;
+        try {
+            const jwtToken = ((_a = req.headers) === null || _a === void 0 ? void 0 : _a.authorization) || ((_b = req.cookies) === null || _b === void 0 ? void 0 : _b.accessToken);
+            if (!jwtToken) {
+                return next(new ApiError_1.default(400, "Token not provided."));
+            }
+            const token = jwtToken.startsWith("Bearer ")
+                ? jwtToken.split("Bearer ")[1]
+                : jwtToken;
+            if (!token) {
+                return next(new ApiError_1.default(400, "Invalid token format."));
+            }
+            const decodedToken = jsonwebtoken_1.default.verify(token, "process.env.accessTokenSecret");
+            const captainId = decodedToken._id;
+            const captain = yield captain_models_1.default.findById(captainId).select("-password");
+            if (!captain) {
+                return next(new ApiError_1.default(400, "No User Found with this token."));
+            }
+            req.captain = captain;
+            next();
         }
-        req.captain = captain;
-        next();
-    }
-    catch (error) {
-        const data = new ApiError_1.default(400, "Un-Authorized Access", [], error.error);
-        res.status(400).send(data);
-        return;
-    }
-});
+        catch (error) {
+            console.error("Authorization error:", error.message || error);
+            next(new ApiError_1.default(400, "Un-Authorized Access", [], error.error));
+        }
+    }))();
+};
 exports.captainAuth = captainAuth;

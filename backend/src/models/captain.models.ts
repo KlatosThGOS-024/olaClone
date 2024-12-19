@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ICaptain } from "../types/captain.types";
@@ -85,13 +85,33 @@ const captainSchema = new Schema<ICaptain>({
   accessToken: {
     type: String,
   },
+  rides: {
+    cancelled: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ride",
+      },
+    ],
+    ongoing: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ride",
+      },
+    ],
+    completed: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ride",
+      },
+    ],
+  },
 });
-
-captainSchema.pre("save", async function () {
-  const hashPassword = await bcrypt.hash(this.password, 10);
-  this.password = hashPassword;
+captainSchema.pre("save", async function (this: ICaptain) {
+  if (this.isModified("password")) {
+    const hashPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashPassword;
+  }
 });
-
 captainSchema.methods.comparePassword = function (
   password: string
 ): Promise<boolean> {

@@ -2,15 +2,15 @@ import { Router } from "express";
 import { captainAuth, userAuth } from "../middleware/user.middleware";
 import {
   createRide,
-  getPendingRideByUser,
   getPendingRideByCaptain,
+  getOngoingRide,
 } from "../controllers/ride.controller";
 
 const rideRouter = Router();
 rideRouter.route("/user-ride").post(userAuth, createRide);
-rideRouter.route("/user-ride/pending").get(userAuth, getPendingRideByUser);
 rideRouter
   .route("/captain-ride/pending")
   .get(captainAuth, getPendingRideByCaptain);
-
+rideRouter.route("/user-ride/pending").get(userAuth, getPendingRideByCaptain);
+rideRouter.route("/ongoing-ride").get(captainAuth, getOngoingRide);
 export default rideRouter;

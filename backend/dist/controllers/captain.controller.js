@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userProfileFromCaptain = exports.captainProfile = exports.captainLogout = exports.captainLogin = exports.captainCreate = void 0;
+exports.updateCaptainOngoin = exports.userProfileFromCaptain = exports.captainProfile = exports.captainLogout = exports.captainLogin = exports.captainCreate = void 0;
 const asyncHandler_1 = __importDefault(require("../utils/asyncHandler"));
 const ApiResponse_1 = __importDefault(require("../utils/ApiResponse"));
 const ApiError_1 = __importDefault(require("../utils/ApiError"));
 const captain_models_1 = __importDefault(require("../models/captain.models"));
 const captain_types_1 = require("../types/captain.types");
 const user_models_1 = __importDefault(require("../models/user.models"));
+const ride_models_1 = __importDefault(require("../models/ride.models"));
 const generateAccessToken = (captain) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = yield captain.generateAccessTokenMethod();
     return accessToken;
@@ -102,6 +103,32 @@ const userProfileFromCaptain = (0, asyncHandler_1.default)((req, res) => __await
         .send(new ApiResponse_1.default(200, userProfile, "User Profile Successfully retrevied"));
 }));
 exports.userProfileFromCaptain = userProfileFromCaptain;
+const updateCaptainOngoin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const captainId = req.captain;
+    const rideId = req.body;
+    const findRide = yield ride_models_1.default.findByIdAndUpdate(rideId, {
+        captain: captainId,
+    });
+    if (findRide) {
+        const updateCaptainData = yield captain_models_1.default.findByIdAndUpdate(captainId, {
+            ongoingRide: [rideId],
+        });
+        if (updateCaptainData) {
+            res.status(200).send(new ApiResponse_1.default(200, "Captain is now riding"));
+        }
+        else {
+            res
+                .status(400)
+                .send(new ApiError_1.default(400, "Something went wrong while updating captain ongoing"));
+        }
+    }
+    else {
+        res
+            .status(400)
+            .send(new ApiError_1.default(400, "Something went wrong while Ride"));
+    }
+}));
+exports.updateCaptainOngoin = updateCaptainOngoin;
 const captainLogout = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const captain = req.captain;
     captain.status = "inactive";

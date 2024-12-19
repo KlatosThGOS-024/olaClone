@@ -18,7 +18,7 @@ const NearbyDriver = () => {
           <div key={value.fullLocation} className=" mx-[28px]">
             <div className=" flex space-x-[16px] items-center">
               <img
-                src="../../public/images/location.png"
+                src="/images/location.png"
                 className=" w-[28px] h-[28px]"
               ></img>
               <p className=" flex flex-col">
@@ -31,7 +31,7 @@ const NearbyDriver = () => {
             <hr></hr>
             <div className=" flex space-x-[16px] items-center">
               <img
-                src="../../public/images/monument.png"
+                src="/images/monument.png"
                 className=" w-[28px] h-[28px]"
               ></img>
               <p className=" flex flex-col">
@@ -46,10 +46,7 @@ const NearbyDriver = () => {
             </div>
             <hr></hr>
             <div className=" flex space-x-[16px] items-center">
-              <img
-                src="../../public/images/money.png"
-                className=" w-[28px] h-[28px]"
-              ></img>
+              <img src="/images/money.png" className=" w-[28px] h-[28px]"></img>
               <p className=" flex flex-col">
                 <span className=" font-[600] text-[20px]">{value.price}</span>
                 <span className=" text-gray-700 text-[17px]">Cash Cash</span>

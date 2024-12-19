@@ -19,17 +19,14 @@ export const CaptainDetails = ({
             <img
               onClick={() => openUserDetails()}
               className=" cursor-pointer w-[42px] "
-              src=" ../../public/images/remove.png"
+              src=" /images/remove.png"
             />
           </div>
           <div className=" px-[22px] flex items-center justify-between">
             <div className=" flex items-center gap-[28px]">
               <p className=" bg-green-400  rounded-full">
                 {" "}
-                <img
-                  className=" w-[87px]"
-                  src="../../public/images/olaDriver.png"
-                ></img>
+                <img className=" w-[87px]" src="/images/olaDriver.png"></img>
               </p>
               <div>
                 <span className=" block font-semibold text-[28px]">
@@ -42,26 +39,17 @@ export const CaptainDetails = ({
           </div>
           <div className=" grid grid-cols-3 px-[18px] my-[28px] items-center justify-between">
             <div className=" flex flex-col items-center">
-              <img
-                className=" w-[42px]"
-                src="../../public/images/clock_2725210.png"
-              ></img>
+              <img className=" w-[42px]" src="/images/clock_2725210.png"></img>
               <span className=" text-[18px] ">10.2</span>
               <span className=" text-gray-500">HOUR ONLINE</span>
             </div>
             <div className=" flex flex-col items-center">
-              <img
-                className=" w-[42px]"
-                src="../../public/images/speedometer.png"
-              ></img>
+              <img className=" w-[42px]" src="/images/speedometer.png"></img>
               <span className=" text-[18px] ">100.2km</span>
               <span className=" text-gray-500">TOTAL DISTANCE</span>
             </div>
             <div className=" flex flex-col items-center">
-              <img
-                className=" w-[42px]"
-                src="../../public/images/suitcase.png"
-              ></img>
+              <img className=" w-[42px]" src="/images/suitcase.png"></img>
               <span className=" block text-[18px] ">45</span>
               <span className=" text-gray-500">JOBS DONE</span>
             </div>

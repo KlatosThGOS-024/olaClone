@@ -9,7 +9,7 @@ import { UserProtectedRoute } from "./components/userProtectedRoutes";
 import { HomePage } from "./pages/HomePage";
 import { UserLogOut } from "./pages/UserLogOut";
 import { CaptainHome } from "./pages/CaptainHome";
-import { Riding } from "./pages/RidingPage";
+import { Riding } from "./pages/UserRidingPage";
 import { CabRequest } from "./components/CabRequest";
 import { FinishRide } from "./components/FinishRide";
 import { io } from "socket.io-client";
@@ -36,8 +36,10 @@ function App() {
         />
         <Route element={<CaptainHome />} path="/captain/home" />
         <Route element={<CabRequest />} path="/captain/cabRequests" />
-
-        <Route element={<FinishRide />} path="/captain/ride" />
+        <Route
+          element={<FinishRide />}
+          path={`/captain/ride/:rideId/:userId`}
+        />
       </Routes>
     </BrowserRouter>
   );

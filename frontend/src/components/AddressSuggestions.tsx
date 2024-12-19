@@ -2,11 +2,9 @@ export const AddressSuggestions = ({
   onSelectSuggestion,
   suggestions,
   setInput,
-  classAttribute,
 }: {
   setInput: React.Dispatch<React.SetStateAction<string>>;
-  classAttribute: string;
-  onSelectSuggestion: any;
+  onSelectSuggestion: (address: string) => void;
   suggestions: string[];
 }) => {
   const isSuggestionsEmpty = suggestions.length === 1 && suggestions[0] === "";
@@ -15,7 +13,7 @@ export const AddressSuggestions = ({
     <div
       className={`${
         isSuggestionsEmpty ? "hidden" : ""
-      } z-50 ${classAttribute} bg-gray-100 rounded-lg shadow-md max-w-md mx-auto`}
+      } z-50 absolute bg-gray-100 rounded-lg shadow-md max-w-md mx-auto`}
     >
       <ul>
         {suggestions.length > 0 ? (
