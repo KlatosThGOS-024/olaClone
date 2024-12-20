@@ -117,36 +117,40 @@ const userProfileFromCaptain = asyncHandler(
       );
   }
 );
-const updateCaptainOngoin = asyncHandler(
-  async (req: Request, res: Response) => {
-    const captainId = req.captain;
-    const rideId = req.body;
-    const findRide = await Ride.findByIdAndUpdate(rideId, {
-      captain: captainId,
-    });
-    if (findRide) {
-      const updateCaptainData = await Captain.findByIdAndUpdate(captainId, {
-        ongoingRide: [rideId],
-      });
-      if (updateCaptainData) {
-        res.status(200).send(new ApiResponse(200, "Captain is now riding"));
+const updateCaptainRide = asyncHandler(async (req: Request, res: Response) => {
+  const captainId = req.captain;
+  const { rideId, status } = req.body;
+  console.log(status, rideId);
+  const findRide = await Ride.findByIdAndUpdate(rideId, {
+    captain: captainId,
+  });
+  if (findRide) {
+    try {
+      if (status == "ongoing") {
+        const updateCaptainData = await Captain.findByIdAndUpdate(captainId, {
+          $set: { "rides.ongoing": [rideId] },
+        });
       } else {
-        res
-          .status(400)
-          .send(
-            new ApiError(
-              400,
-              "Something went wrong while updating captain ongoing"
-            )
-          );
+        const updateCaptainData = await Captain.findByIdAndUpdate(captainId, {
+          $push: { [`rides.${status}`]: rideId },
+        });
       }
-    } else {
+      res.status(200).send(new ApiResponse(200, "Captain is now riding"));
+    } catch (error) {
       res
         .status(400)
-        .send(new ApiError(400, "Something went wrong while Ride"));
+        .send(
+          new ApiError(
+            400,
+            "Something went wrong while updating captain ongoing",
+            error
+          )
+        );
     }
+  } else {
+    res.status(400).send(new ApiError(400, "Something went wrong while Ride"));
   }
-);
+});
 const captainLogout = asyncHandler(async (req: Request, res: Response) => {
   const captain = req.captain;
   captain.status = "inactive";
@@ -162,5 +166,6 @@ export {
   captainLogout,
   captainProfile,
   userProfileFromCaptain,
-  updateCaptainOngoin,
+  updateCaptainRide,
 };
+// captain-ride/update

@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import ChooseYourRide from "../components/ChooseYourRide";
 import { ConfirmYourRide } from "../components/ConfirmYourRide";
 import { AddressSuggestions } from "../components/AddressSuggestions";
-import { FirstRideType, VehicleDetails } from "../assets/Type";
+import { VehicleDetails } from "../assets/Type";
 
 // user Sjernf@!34
 // securePassword123@
 
-export const HomePage = () => {
+export const UserHomePage = () => {
   const [openPanel, setopenPanel] = useState(false);
   const [vechPanel, setvechPanel] = useState(false);
   const [Suggestions, setSuggestions] = useState<string[]>([]);
@@ -25,7 +25,6 @@ export const HomePage = () => {
     vehicleFee: "",
     vehicleAway: "",
   });
-  const [, setRideDetials] = useState<FirstRideType>();
 
   const panelOpen = () => {
     setopenPanel(!openPanel);
@@ -53,13 +52,8 @@ export const HomePage = () => {
     });
     const responseData = await response.json();
     const data = responseData.data;
-
+    console.log(data);
     return data;
-
-    // setdistanceTime({
-    //   distance: addresses.data.distance.text,
-    //   time: addresses.data.duration.text,
-    // });
   };
   const rideConfirmedFunc = () => {
     setConfirmRide(!confirmRide);
@@ -288,7 +282,6 @@ export const HomePage = () => {
               origin={pickupLocation}
               destination={destinationLocation}
               backHome={rideConfirmedFunc}
-              setRideDetails={setRideDetials}
             />
           </motion.div>
         </div>

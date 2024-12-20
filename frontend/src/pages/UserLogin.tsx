@@ -1,6 +1,6 @@
 import { Login } from "../components/Login";
 
-export const UserLogin = () => {
+export const UserLoginPage = () => {
   return (
     <div>
       <Login userType="user" />

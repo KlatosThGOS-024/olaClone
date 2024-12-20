@@ -35,7 +35,6 @@ io.on("connection", (socket) => {
     console.log("user connected from backend");
     socket.on("ride-requested", (message) => {
         io.emit("ride-requested", message);
-        console.log("user message:", message);
     });
     socket.on("ride-accepted", (message) => {
         io.emit("ride-accepted", message);

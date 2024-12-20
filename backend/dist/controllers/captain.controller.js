@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateCaptainOngoin = exports.userProfileFromCaptain = exports.captainProfile = exports.captainLogout = exports.captainLogin = exports.captainCreate = void 0;
+exports.updateCaptainRide = exports.userProfileFromCaptain = exports.captainProfile = exports.captainLogout = exports.captainLogin = exports.captainCreate = void 0;
 const asyncHandler_1 = __importDefault(require("../utils/asyncHandler"));
 const ApiResponse_1 = __importDefault(require("../utils/ApiResponse"));
 const ApiError_1 = __importDefault(require("../utils/ApiError"));
@@ -103,32 +103,38 @@ const userProfileFromCaptain = (0, asyncHandler_1.default)((req, res) => __await
         .send(new ApiResponse_1.default(200, userProfile, "User Profile Successfully retrevied"));
 }));
 exports.userProfileFromCaptain = userProfileFromCaptain;
-const updateCaptainOngoin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateCaptainRide = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const captainId = req.captain;
-    const rideId = req.body;
+    const { rideId, status } = req.body;
+    console.log(status, rideId);
     const findRide = yield ride_models_1.default.findByIdAndUpdate(rideId, {
         captain: captainId,
     });
     if (findRide) {
-        const updateCaptainData = yield captain_models_1.default.findByIdAndUpdate(captainId, {
-            ongoingRide: [rideId],
-        });
-        if (updateCaptainData) {
+        try {
+            if (status == "ongoing") {
+                const updateCaptainData = yield captain_models_1.default.findByIdAndUpdate(captainId, {
+                    $set: { "rides.ongoing": [rideId] },
+                });
+            }
+            else {
+                const updateCaptainData = yield captain_models_1.default.findByIdAndUpdate(captainId, {
+                    $push: { [`rides.${status}`]: rideId },
+                });
+            }
             res.status(200).send(new ApiResponse_1.default(200, "Captain is now riding"));
         }
-        else {
+        catch (error) {
             res
                 .status(400)
-                .send(new ApiError_1.default(400, "Something went wrong while updating captain ongoing"));
+                .send(new ApiError_1.default(400, "Something went wrong while updating captain ongoing", error));
         }
     }
     else {
-        res
-            .status(400)
-            .send(new ApiError_1.default(400, "Something went wrong while Ride"));
+        res.status(400).send(new ApiError_1.default(400, "Something went wrong while Ride"));
     }
 }));
-exports.updateCaptainOngoin = updateCaptainOngoin;
+exports.updateCaptainRide = updateCaptainRide;
 const captainLogout = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const captain = req.captain;
     captain.status = "inactive";
@@ -138,3 +144,4 @@ const captainLogout = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0
         .send(new ApiResponse_1.default(200, captain, "Successfully Logout"));
 }));
 exports.captainLogout = captainLogout;
+// captain-ride/update

@@ -1,35 +1,6 @@
+import { vechileType } from "../assets/constants";
 import { VehicleDetails } from "../assets/Type";
 
-const data = [
-  {
-    imgSrc: "/images/olaGo.jpg",
-    vechName: "OlaGo",
-    description: "Affordable, Compact rides",
-    price: "₹193",
-    timing: "2 Min aways",
-  },
-  {
-    imgSrc: "/images/olaChopper.png",
-    vechName: "olaChopper",
-    description: "Not Affordable, Tera Ghar jayega",
-    price: "₹100000",
-    timing: "1 Min aways",
-  },
-  {
-    imgSrc: "/images/olaTukTuk.png",
-    vechName: "olaTukTuk",
-    description: "Very Affordable, Compact rides",
-    price: "₹193.5",
-    timing: "20 Min aways",
-  },
-  {
-    imgSrc: "/images/uberMoto.png",
-    vechName: "olaMoto",
-    description: "Affordable, MotorCycle rides",
-    price: "₹165",
-    timing: "7 Min aways",
-  },
-];
 const ChooseYourRide = ({
   panelClose,
   closeRide,
@@ -68,7 +39,7 @@ const ChooseYourRide = ({
         <span className=" font-[500] text-black">Leave now</span>
       </p>
       <div className=" flex flex-col space-y-3 py-3 px-2 mx-[2px]">
-        {data.map((value) => (
+        {vechileType.map((value) => (
           <div
             onClick={() => {
               setvehicleDetails({

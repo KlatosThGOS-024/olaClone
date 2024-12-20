@@ -58,26 +58,26 @@ const rideSchema = new Schema<IRide>({
   signature: {
     type: String,
   },
-  otp: {
-    type: String,
-
-    select: false,
-  },
+  otp: { type: String },
+  otpHash: { type: String },
+  otpExpiresAt: { type: Date },
 });
 
-rideSchema.methods.generateOTP = async () => {
+rideSchema.methods.generateOTP = async function () {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const salt = await bcrypt.genSalt(10);
-  const hashedOTP = await bcrypt.hash(otp, salt);
-  return { otp, hashedOTP };
+  this.otpHash = await bcrypt.hash(otp, salt);
+  this.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  await this.save();
+  this.otp = otp;
+  return otp;
 };
 
-rideSchema.methods.verifyOTP = async (
-  otp: string,
-  hashedOTP: string
-): Promise<boolean> => {
-  return bcrypt.compare(otp, hashedOTP);
+rideSchema.methods.verifyOTP = async function (otp: string) {
+  if (this.otpExpiresAt && this.otpExpiresAt < Date.now()) {
+    throw new Error("OTP has expired. Please request a new one.");
+  }
+  return bcrypt.compare(otp, this.otpHash);
 };
-
 const Ride = model<IRide>("Ride", rideSchema);
 export default Ride;

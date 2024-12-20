@@ -1,34 +1,31 @@
 import { useEffect, useState } from "react";
 import { socket } from "../App";
+import { Loader } from "../components/Loader";
+import { RideType } from "../assets/Type";
+import { useLocation } from "react-router-dom";
 // Sare35@gjh
-type RideType = {
-  pickupLocation: string;
-  destinationLocation: string;
-  fare: string;
-  user: string;
-  _id: string;
-  status: string;
-};
 
-export const Riding = () => {
-  const [rideDetails, setRideDetials] = useState<RideType | null>(null);
+export const UserRideComingPage = () => {
+  const [rideDetails, setRideDetials] = useState<RideType[] | null>([]);
   const [rideAccepted, setRideAccepted] = useState(false);
-
+  const location = useLocation();
+  const pathParts = location.pathname.split("/user/ride/");
+  const rideId = pathParts[pathParts.length - 1];
+  console.log(rideId);
   useEffect(() => {
     socket.on("ride-accepted", () => {
       setRideAccepted((prevState) => !prevState);
     });
 
-    // Clean up event listener when the component unmounts
     return () => {
       socket.off("ride-accepted");
     };
   }, []);
 
-  const getPendingRide = async () => {
+  const getCurrentRide = async () => {
     try {
       const token = localStorage.getItem("token");
-      const url = `http://localhost:3000/api/v1/ride/user-ride/pending`;
+      const url = `http://localhost:3000/api/v1/ride/user-ride/current?rideId=${rideId}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -37,6 +34,7 @@ export const Riding = () => {
         },
       });
       const data = await response.json();
+
       if (data.data && data.data.length > 0) {
         setRideDetials(data.data[0]);
       } else {
@@ -48,15 +46,16 @@ export const Riding = () => {
   };
 
   useEffect(() => {
-    getPendingRide();
+    getCurrentRide();
   }, []);
 
   if (!rideAccepted) {
-    return <div>No ride accepted. Please wait...</div>;
-  }
-
-  if (!rideDetails) {
-    return <div>Loading ride details...</div>;
+    return (
+      <div>
+        <Loader />
+        <p>No ride accepted. Please wait...</p>
+      </div>
+    );
   }
 
   return (
@@ -79,10 +78,10 @@ export const Riding = () => {
                 />
                 <p className="flex flex-col">
                   <span className="font-[600] text-[20px]">
-                    {rideDetails?.pickupLocation}
+                    {rideDetails[0]?.pickupLocation}
                   </span>
                   <span className="text-gray-700 text-[17px]">
-                    {rideDetails?.pickupLocation}
+                    {rideDetails[0]?.pickupLocation}
                   </span>
                 </p>
               </div>
@@ -95,10 +94,10 @@ export const Riding = () => {
                 />
                 <p className="flex flex-col">
                   <span className="font-[600] text-[20px]">
-                    {rideDetails?.destinationLocation}
+                    {rideDetails[0]?.destinationLocation}
                   </span>
                   <span className="text-gray-700 text-[17px]">
-                    {rideDetails?.destinationLocation}
+                    {rideDetails[0]?.destinationLocation}
                   </span>
                 </p>
               </div>
@@ -110,8 +109,9 @@ export const Riding = () => {
                   alt="Fare"
                 />
                 <p className="flex flex-col">
-                  <span className="font-[600] text-[20px]">{` ₹${rideDetails?.fare}`}</span>
+                  <span className="font-[600] text-[20px]">{` ₹${rideDetails[0]?.fare}`}</span>
                   <span className="text-gray-700 text-[17px]">Cash Cash</span>
+                  <span>{rideDetails[0].otp}</span>
                 </p>
               </div>
             </div>

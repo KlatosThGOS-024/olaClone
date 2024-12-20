@@ -94,19 +94,28 @@ const rideSchema = new mongoose_1.Schema({
     signature: {
         type: String,
     },
-    otp: {
-        type: String,
-        select: false,
-    },
+    otp: { type: String },
+    otpHash: { type: String },
+    otpExpiresAt: { type: Date },
 });
-rideSchema.methods.generateOTP = () => __awaiter(void 0, void 0, void 0, function* () {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const salt = yield bcrypt_1.default.genSalt(10);
-    const hashedOTP = yield bcrypt_1.default.hash(otp, salt);
-    return { otp, hashedOTP };
-});
-rideSchema.methods.verifyOTP = (otp, hashedOTP) => __awaiter(void 0, void 0, void 0, function* () {
-    return bcrypt_1.default.compare(otp, hashedOTP);
-});
+rideSchema.methods.generateOTP = function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const salt = yield bcrypt_1.default.genSalt(10);
+        this.otpHash = yield bcrypt_1.default.hash(otp, salt);
+        this.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+        yield this.save();
+        this.otp = otp;
+        return otp;
+    });
+};
+rideSchema.methods.verifyOTP = function (otp) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (this.otpExpiresAt && this.otpExpiresAt < Date.now()) {
+            throw new Error("OTP has expired. Please request a new one.");
+        }
+        return bcrypt_1.default.compare(otp, this.otpHash);
+    });
+};
 const Ride = (0, mongoose_1.model)("Ride", rideSchema);
 exports.default = Ride;

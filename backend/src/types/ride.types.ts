@@ -17,6 +17,8 @@ export interface IRide extends Document {
   orderId: string;
   signature: string;
   vehicleType: string;
+  otpHash: string;
+  otpExpiresAt: Date;
   otp: string;
   generateOTP(): any;
 }

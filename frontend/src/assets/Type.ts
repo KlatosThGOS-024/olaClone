@@ -1,12 +1,4 @@
-export type FirstRideType = {
-  pickupLocation: string;
-  destinationLocation: string;
-  fare: string;
-  user: string;
-  _id: string;
-  status: string;
-};
-export type SecondRideType = {
+export type RideType = {
   pickupLocation: string;
   destinationLocation: string;
   fare: string;
@@ -17,6 +9,7 @@ export type SecondRideType = {
   passengerName: string;
   passengerImage: string;
   username: string;
+  otp?: string;
 };
 export type VehicleDetails = {
   vehicleName: string;
@@ -35,3 +28,37 @@ export type RideDetails = {
   _id: string;
   __v: number;
 };
+export type CaptainProfile = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  location: {
+    lat: number;
+    long: number;
+  };
+  rides: {
+    cancelled: string[];
+    ongoing: string[];
+    completed: string[];
+  };
+  status: string;
+  username: string;
+  vehicle: {
+    color: string;
+    plate: string;
+    capacity: number;
+    vehicleType: string;
+  };
+};
+// type RideType = {
+//   pickupLocation: string;
+//   destinationLocation: string;
+//   fare: string;
+//   user: string;
+//   _id: string;
+//   status: string;
+//   userId?: string;
+//   passengerName: string;
+//   passengerImage: string;
+//   username: string;
+// };

@@ -1,6 +1,6 @@
 import { Signup } from "../components/SignUp";
 
-export const CaptainSignUp = () => {
+export const CaptainSignUpPage = () => {
   return (
     <div>
       <Signup userType="captain" />

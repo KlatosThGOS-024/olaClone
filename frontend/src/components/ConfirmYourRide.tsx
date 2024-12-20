@@ -1,34 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../App";
-import { FirstRideType, RideDetails } from "../assets/Type";
-import React from "react";
+import { RideType } from "../assets/Type";
 
 export const ConfirmYourRide = ({
   backHome,
   origin,
   destination,
   CreateTheRideNow,
-  setRideDetails,
 }: {
   CreateTheRideNow: () => Promise<any>;
-  setRideDetails: React.Dispatch<
-    React.SetStateAction<FirstRideType | undefined>
-  >;
   origin: string;
   destination: string;
   backHome: () => void;
 }) => {
   const [rideConfirmed, setRideConfirmed] = useState(false);
-  const [rideDetails, setRideDetailsState] = useState<FirstRideType>();
+  const [rideDetails, setRideDetailsState] = useState<RideType>();
 
   const value = useRef(rideConfirmed);
   const handleClick = async () => {
-    const rideInfo: FirstRideType = await CreateTheRideNow();
-    setRideDetails(rideInfo);
+    const rideInfo: RideType = await CreateTheRideNow();
+    console.log("RideInfoRideInfoRideInfoRideInfo", rideInfo);
     setRideDetailsState(rideInfo);
     setRideConfirmed(!rideConfirmed);
-    navigate("/user/ride");
+    navigate(`/user/ride/${rideInfo._id}`);
   };
   useEffect(() => {
     if (value.current != rideConfirmed) {

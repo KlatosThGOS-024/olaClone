@@ -140,9 +140,17 @@ const getPendingRideByCaptain = asyncHandler(
     res.send(new ApiResponse(200, getRide, "Successfully Get the Ride"));
   }
 );
+const getCurrentRide = asyncHandler(async (req: Request, res: Response) => {
+  const { rideId } = req.query;
+
+  const getRide = await Ride.findById(rideId);
+  res.send(new ApiResponse(200, getRide, "Successfully Get the Ride"));
+});
+
 export {
   createRide,
   getPendingRideByUser,
   getPendingRideByCaptain,
   getOngoingRide,
+  getCurrentRide,
 };

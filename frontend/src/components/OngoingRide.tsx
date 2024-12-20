@@ -1,18 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-type RideType = {
-  pickupLocation: string;
-  destinationLocation: string;
-  fare: string;
-  user: string;
-  _id: string;
-  status: string;
-  userId?: string;
-  passengerName: string;
-  passengerImage: string;
-  username: string;
-};
-export const FinishRide = ({}) => {
+import { Loader } from "./Loader";
+import { RideType } from "../assets/Type";
+
+export const OngoingRidePage = ({}) => {
   const [rideInfo, setRideInfo] = useState<RideType[]>([]);
 
   const { rideId } = useParams();
@@ -38,7 +29,12 @@ export const FinishRide = ({}) => {
     getOngoingRide(rideId);
   }, []);
   if (!rideInfo) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {" "}
+        <Loader />
+      </div>
+    );
   }
   return (
     <section className=" w-full">
@@ -81,6 +77,7 @@ export const FinishRide = ({}) => {
                   {value.destinationLocation}
                 </p>
               </div>
+              <p>{value.otp}</p>
             </div>
           ))}
         </div>
@@ -95,3 +92,4 @@ export const FinishRide = ({}) => {
     </section>
   );
 };
+// updateCaptainRides("ongoing", value._id);
