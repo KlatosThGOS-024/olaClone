@@ -28,7 +28,7 @@ export const Login = ({ userType }: { userType: string }) => {
         }
       );
       localStorage.setItem("token", userResponse.data?.data);
-      navigate("/home");
+      navigate("/user/home");
     }
   }
 
@@ -68,9 +68,9 @@ export const Login = ({ userType }: { userType: string }) => {
           <a> New here </a>
           <Link to={`/${userType}/signUp`}>
             {" "}
-            <a className=" hover:text-black hover:underline text-blue-500">
+            <span className=" hover:text-black hover:underline text-blue-500">
               Create an Account?
-            </a>{" "}
+            </span>{" "}
           </Link>
         </p>
       </div>

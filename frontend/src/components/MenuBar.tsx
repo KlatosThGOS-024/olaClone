@@ -27,7 +27,7 @@ export const MenuBar = ({
               alt="Close menu"
             />
             <ul className="space-y-4 mt-6">
-              <Link to={"/captain/cabRequests"}>
+              <Link to={"/captain/RideRequests"}>
                 <li>Cab Requests</li>
               </Link>
             </ul>

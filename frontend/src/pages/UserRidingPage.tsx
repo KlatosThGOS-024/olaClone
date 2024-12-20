@@ -3,15 +3,14 @@ import { socket } from "../App";
 import { Loader } from "../components/Loader";
 import { RideType } from "../assets/Type";
 import { useLocation } from "react-router-dom";
-// Sare35@gjh
 
 export const UserRideComingPage = () => {
-  const [rideDetails, setRideDetials] = useState<RideType[] | null>([]);
+  const [rideDetails, setRideDetails] = useState<RideType[]>([]);
   const [rideAccepted, setRideAccepted] = useState(false);
   const location = useLocation();
   const pathParts = location.pathname.split("/user/ride/");
   const rideId = pathParts[pathParts.length - 1];
-  console.log(rideId);
+
   useEffect(() => {
     socket.on("ride-accepted", () => {
       setRideAccepted((prevState) => !prevState);
@@ -20,6 +19,10 @@ export const UserRideComingPage = () => {
     return () => {
       socket.off("ride-accepted");
     };
+  }, []);
+
+  useEffect(() => {
+    getCurrentRide();
   }, []);
 
   const getCurrentRide = async () => {
@@ -35,19 +38,16 @@ export const UserRideComingPage = () => {
       });
       const data = await response.json();
 
-      if (data.data && data.data.length > 0) {
-        setRideDetials(data.data[0]);
-      } else {
-        console.warn("No pending ride found.");
-      }
+      console.log("Ride data fetched:", data);
+
+      setRideDetails(Array(data.data) || []);
     } catch (error) {
       console.error("Error fetching ride details:", error);
     }
   };
-
   useEffect(() => {
-    getCurrentRide();
-  }, []);
+    console.log("Current ride details:", rideDetails);
+  }, [rideDetails]);
 
   if (!rideAccepted) {
     return (
@@ -58,10 +58,21 @@ export const UserRideComingPage = () => {
     );
   }
 
+  if (rideDetails.length === 0) {
+    return (
+      <div>
+        <Loader />
+        <p>Loading ride details...</p>
+      </div>
+    );
+  }
+
+  const [ride] = rideDetails;
+
   return (
-    <section className=" w-full">
+    <section className="w-full">
       <div className="w-[440px] rounded-lg mx-auto relative">
-        <div className="  ">
+        <div>
           <img
             className="w-[550px]"
             src="/images/carRiding.gif"
@@ -78,10 +89,10 @@ export const UserRideComingPage = () => {
                 />
                 <p className="flex flex-col">
                   <span className="font-[600] text-[20px]">
-                    {rideDetails[0]?.pickupLocation}
+                    {ride?.destinationLocation || "N/A"}
                   </span>
                   <span className="text-gray-700 text-[17px]">
-                    {rideDetails[0]?.pickupLocation}
+                    {ride?.destinationLocation || "N/A"}
                   </span>
                 </p>
               </div>
@@ -94,10 +105,10 @@ export const UserRideComingPage = () => {
                 />
                 <p className="flex flex-col">
                   <span className="font-[600] text-[20px]">
-                    {rideDetails[0]?.destinationLocation}
+                    {ride?.pickupLocation || "N/A"}
                   </span>
                   <span className="text-gray-700 text-[17px]">
-                    {rideDetails[0]?.destinationLocation}
+                    {ride?.pickupLocation || "N/A"}
                   </span>
                 </p>
               </div>
@@ -109,17 +120,16 @@ export const UserRideComingPage = () => {
                   alt="Fare"
                 />
                 <p className="flex flex-col">
-                  <span className="font-[600] text-[20px]">{` ₹${rideDetails[0]?.fare}`}</span>
+                  <span className="font-[600] text-[20px]">{` ₹${
+                    ride?.fare || 0
+                  }`}</span>
                   <span className="text-gray-700 text-[17px]">Cash Cash</span>
-                  <span>{rideDetails[0].otp}</span>
+                  <span>{ride?.otp || "N/A"}</span>
                 </p>
               </div>
             </div>
           </div>
-          <button
-            className="mt-[36px] hover:bg-green-400
-           bg-green-500 px-4 py-3 text-white rounded-lg w-full text-[18px] font-[600]"
-          >
+          <button className="mt-[36px] hover:bg-green-400 bg-green-500 px-4 py-3 text-white rounded-lg w-full text-[18px] font-[600]">
             Make Payment
           </button>
         </div>

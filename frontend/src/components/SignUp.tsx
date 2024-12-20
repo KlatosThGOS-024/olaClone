@@ -2,16 +2,12 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 const BACKEND_URI = "http://localhost:3000";
-
-export function Input({
-  label,
-  placeholder,
-  setInput,
-}: {
+type InputType = {
   label: string;
   placeholder: string; // React.Dispatch<React.SetStateAction<boolean>>;
-  setInput: React.Dispatch<React.SetStateAction<string | number>>;
-}) {
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+};
+export function Input({ label, placeholder, setInput }: InputType) {
   return (
     <div className=" mb-6 ">
       <label className=" text-[24px]">{label}</label>
@@ -32,7 +28,7 @@ export const Signup = ({ userType }: { userType: string }) => {
   const [firstName, setFirstName] = useState("");
   const [color, setColor] = useState("");
   const [type, setType] = useState("");
-  const [capacity, setCapacity] = useState(0);
+  const [capacity, setCapacity] = useState("");
   const [plate, setPlate] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");

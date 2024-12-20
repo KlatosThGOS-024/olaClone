@@ -73,9 +73,14 @@ const userLogin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, vo
 }));
 exports.userLogin = userLogin;
 const userProfile = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.body.userId;
-    console.log("userssfsdfsdfdfsdfsdf", userId);
+    const { userId } = req.body;
+    if (!userId) {
+        res.status(400).send(new ApiError_1.default(400, "User Profie unsuccessfull"));
+    }
     const user = yield user_models_1.default.findById(userId);
+    if (!user) {
+        res.status(400).send(new ApiError_1.default(400, "User Profie unsuccessfull"));
+    }
     res
         .status(200)
         .send(new ApiResponse_1.default(200, user, "User Profile Successfully retrevied"));

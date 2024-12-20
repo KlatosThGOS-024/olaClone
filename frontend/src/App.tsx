@@ -5,7 +5,7 @@ import { UserSignupPage } from "./pages/UserSignupPage";
 import { UserLoginPage } from "./pages/UserLogin";
 import { CaptainSignUpPage } from "./pages/CaptainSignUp";
 import { CaptainLoginPage } from "./pages/CaptainLogin";
-import { UserProtectedRoute } from "./components/userProtectedRoutes";
+
 import { UserHomePage } from "./pages/HomePage";
 import { UserLogOut } from "./pages/UserLogOut";
 import { CaptainHomePage } from "./pages/CaptainHome";
@@ -13,6 +13,8 @@ import { UserRideComingPage } from "./pages/UserRidingPage";
 import { RideRequestsPage } from "./pages/RideRequests";
 import { OngoingRidePage } from "./components/OngoingRide";
 import { io } from "socket.io-client";
+import { UserProtectedRoute } from "./components/userProtectedRoutes";
+import { CaptainProtectedRoute } from "./components/captainProtectedRoute";
 
 const socket = io("http://localhost:3000");
 function App() {
@@ -28,10 +30,38 @@ function App() {
           element={<UserProtectedRoute>{<UserHomePage />}</UserProtectedRoute>}
           path="/user/home"
         />
-        <Route element={<CaptainHomePage />} path="/captain/home" />
-        <Route element={<UserRideComingPage />} path="/user/ride/:rideId" />
-        <Route element={<RideRequestsPage />} path="/captain/RideRequests" />
-        <Route element={<OngoingRidePage />} path={`/captain/ride/:rideId`} />
+        <Route
+          element={
+            <CaptainProtectedRoute>
+              <CaptainHomePage />
+            </CaptainProtectedRoute>
+          }
+          path="/captain/home"
+        />
+        <Route
+          element={
+            <UserProtectedRoute>
+              <UserRideComingPage />
+            </UserProtectedRoute>
+          }
+          path="/user/ride/:rideId"
+        />
+        <Route
+          element={
+            <CaptainProtectedRoute>
+              <RideRequestsPage />
+            </CaptainProtectedRoute>
+          }
+          path="/captain/RideRequests"
+        />
+        <Route
+          element={
+            <CaptainProtectedRoute>
+              <OngoingRidePage />
+            </CaptainProtectedRoute>
+          }
+          path={`/captain/ride/:rideId`}
+        />
 
         <Route
           element={<UserProtectedRoute>{<UserLogOut />}</UserProtectedRoute>}

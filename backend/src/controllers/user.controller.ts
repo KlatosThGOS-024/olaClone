@@ -67,9 +67,14 @@ const userLogin = asyncHandler(async (req: Request, res: Response) => {
     .send(new ApiResponse(200, accessToken, "Successfully login"));
 });
 const userProfile = asyncHandler(async (req: Request, res: Response) => {
-  const userId = req.body.userId;
-  console.log("userssfsdfsdfdfsdfsdf", userId);
+  const { userId } = req.body;
+  if (!userId) {
+    res.status(400).send(new ApiError(400, "User Profie unsuccessfull"));
+  }
   const user = await User.findById(userId);
+  if (!user) {
+    res.status(400).send(new ApiError(400, "User Profie unsuccessfull"));
+  }
   res
     .status(200)
     .send(new ApiResponse(200, user, "User Profile Successfully retrevied"));
